@@ -1,5 +1,5 @@
 import React from 'react';
-// import {connect} from 'react-redux';
+import {connect} from 'react-redux';
 // import actions from '../actions/cheese';
 
 class MedList extends React.Component {
@@ -22,13 +22,12 @@ class MedList extends React.Component {
 	}
 }
 
-// let mapStateToProps = (state, props) => {
-// 	return {
-// 		cheeses: state.cheeses
-// 	};
-// };
+let mapStateToProps = (state, props) => {
+	return {
+		meds: state.medications
+	};
+};
 
-// let Container = connect(mapStateToProps)(CheeseList);
-// module.exports = Container;
+let Container = connect(mapStateToProps)(MedList);
 
-export default MedList;
+export default Container;
