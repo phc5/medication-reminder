@@ -12,51 +12,45 @@
 <!-- Your HTML goes here -->
 
 <header class="main-header">
-  <a href="#" id="logo">HOME</a>
+
 
 <ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#profile">Profile</a></li>
+  <li role="presentation" class="active"><a href="#" id="logo">HOME</a></li>
+  <li role="presentation"><a href="#profile">Profile</a></li>
   <li role="presentation"><a href="#signupForm">SignUp</a></li>
   <li role="presentation"><a href="#contactUs">Contact Us</a></li>
 </ul>
 </header>
 
-<h1>LOGIN</h1>
+
   <form id="loginForm">
-    <div class="form-group">
-        <input type="text" name="username" id="username" class="form-control input-sm" placeholder="Username">
+
+    <div id="border-form" class="form-group">
+    <h1>LOGIN</h1>
+        <input type="text" name="username" id="username" class="form-control input-sm" placeholder="Username" />
+        <input type="password" name="password" value="" class="form-control input-sm" placeholder="Password"  />
+        <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+        <input type="submit" value="Login" class="btn btn-info btn-block">
     </div>
-    <div class="row">
-      <div class="col-xs-6 col-sm-6 col-md-6">
-        <div class="form-group">
-          <input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password">
-        </div>
-      </div>
-    </div>
-    <input type="submit" value="Login" class="btn btn-info btn-block">
   </form>
 
 
 <!--signup form-->
 
-<div class="span3">
-  <h2>Sign Up</h2>
+
     <form id="signupForm">
-      <div class="row">
-        <div class="col-xs-6 col-md-6">
-          <input type="text" name="firstname" value="" class="form-control input-sm" placeholder="First Name"  />
-        </div>
-        <div class="col-xs-6 col-md-6">
-          <input type="text" name="lastname" value="" class="form-control input-sm" placeholder="Last Name"  />
-        </div>
-      </div>
+      <div id="border-signup">
+      <h1>Sign Up</h1>
+        <input type="text" name="firstname" value="" class="form-control input-sm" placeholder="First Name"  />
+        <input type="text" name="lastname" value="" class="form-control input-sm" placeholder="Last Name"  />
         <input type="text" name="username" value="" class="form-control input-sm" placeholder="Username"  />
         <input type="text" name="email" value="" class="form-control input-sm" placeholder="Email Address"  />
         <input type="password" name="password" value="" class="form-control input-sm" placeholder="Password"  />
         <input type="password" name="confirm_password" value="" class="form-control input-sm" placeholder="Confirm Password"  />
+        <label><input type="checkbox" name="terms"> I agree with the <a href="#">Terms and Conditions</a>.</label>
         <input type="submit" value="Sign Up" class="btn btn-info btn-block">
+      </div>
     </form>
-</div>
 
 <div id="profile">
   <p>Let's be honest, there are times when you accidentally forget to take your medication.  I know I have.  This app is designed to make our lives easier by setting a reminder to take all of your medications at any time given.  It also keeps the medication list handy where you can take it to your doctor's appointment and won't have to memorize any names that are difficult to pronouce.  If you fill that you can benefit from this, look no further, just click on Sign Up and let's get started</p>

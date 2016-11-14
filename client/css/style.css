@@ -4,6 +4,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  margin: 0px;
 }
 
 .nav-pills {
@@ -12,25 +13,41 @@ body {
 }
 
 form {
-  max-width: 450px;
-  margin: auto auto;
-}
-
-.form-group {
-  display: inline-block;
-  text-align: center;
+  max-width: 400px;
+  margin: 150px auto;
 }
 
 input {
-  margin: 10px;
+  margin-top: 15px;
 }
 
-#signupForm, h2 {
+#loginForm {
+  width: 400px;
+}
+
+#signupForm {
   margin-top: 100px;
+  width: 400px;
 }
 
-h1, h2 {
-  text-align: center;
+#border-form {
+  border: 4px solid grey;
+  box-shadow: 8px 5px 5px black;
+  border-radius: 8px;
+  background-color: white;
+  width: 500px;
+  height: 300px;
+  padding: 40px 25px 25px 25px;
+}
+
+#border-signup {
+  border: 8px solid grey;
+  box-shadow: 8px 5px 5px black;
+  border-radius: 8px;
+  background-color: white;
+  width: 500px;
+  height: 500px;
+  padding: 25px 25px 25px 25px;
 }
 
 
