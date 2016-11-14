@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-// import actions from '../actions/cheese';
+// import actions from '../actions/medication';
 
 class MedList extends React.Component {
 	constructor(props) {

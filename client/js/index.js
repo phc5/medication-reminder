@@ -7,12 +7,10 @@ import store from './store';
 
 console.log(`Client running in ${process.env.NODE_ENV} mode`);
 
-let items = ["Toast", "Bread", "Eggs"];
-
 document.addEventListener('DOMContentLoaded', () => {
 	ReactDOM.render(
 		<Provider store={store}>
-			<MedContainer meds={items}/>
+			<MedContainer />
 		</Provider>, document.getElementById('app')
 	);
 });

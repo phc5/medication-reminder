@@ -3,7 +3,14 @@ import actions from '../actions/medication';
 const initialState = {
 	medications: ["test", "state", "now"],
 	loading: false,
-	error: null
+	error: null, 
+	sunFlag: false,
+	monFlag: false,
+	tueFlag: false,
+	wedFlag: false,
+	thuFlag: false,
+	friFlag: false,
+	satFlag: false
 }
 
 const gameReducer = (state, action) => {
@@ -19,6 +26,30 @@ const gameReducer = (state, action) => {
 	} else if (action.type === actions.FETCH_MEDICATION_ERROR) {
 		state.loading = false;
 		state.error = action.error;
+	} else if (action.type === actions.CLICK_DAY) {
+		switch(action.day) {
+			case "Sunday":
+				state.sunFlag = !state.sunFlag;
+				break;
+			case "Monday":
+				state.monFlag = !state.monFlag;
+				break;
+			case "Tuesday":
+				state.tueFlag = !state.tueFlag;
+				break;
+			case "Wednesday":
+				state.wedFlag = !state.wedFlag;
+				break;
+			case "Thursday":
+				state.thuFlag = !state.thuFlag;
+				break;
+			case "Friday":
+				state.friFlag = !state.friFlag;
+				break;
+			case "Saturday":
+				state.satFlag = !state.satFlag;
+				break;
+		}
 	}
 
 	return state;

@@ -1,5 +1,13 @@
 import fetch from 'isomorphic-fetch';
 
+const CLICK_DAY = "CLICK_DAY";
+const clickDay = (day) => {
+	return {
+		type: CLICK_DAY,
+		day: day
+	};
+};
+
 const FETCH_MEDICATION_REQUEST = "FETCH_MEDICATION_REQUEST";
 const fetchMedicationRequest = () => {
 	return {
@@ -43,6 +51,9 @@ const fetchMedications = () => {
 		});
 	}
 };
+
+exports.CLICK_DAY = CLICK_DAY
+exports.clickDay = clickDay
 
 exports.FETCH_MEDICATION_REQUEST = FETCH_MEDICATION_REQUEST
 exports.fetchMedicationRequest = fetchMedicationRequest

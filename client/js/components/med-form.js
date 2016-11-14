@@ -1,23 +1,35 @@
 import React from 'react';
-// import {connect} from 'react-redux';
-// import actions from '../actions/cheese';
+import {connect} from 'react-redux';
+import actions from '../actions/medication';
+
+let createHandlers = (dispatch) => {
+	let dayClick = (event) => {
+		event.preventDefault();
+		dispatch(actions.clickDay(event.target.name))
+	}
+	return {
+		dayClick
+	}
+}
+
 
 class MedForm extends React.Component {
 	constructor(props) {
 	    super(props);
-	    // Operations usually carried out in componentWillMount go here
+	    this.handlers = createHandlers(this.props.dispatch);
 	}
 	render() {
+		console.log(this.props.sunFlag);
 		return <form>
 					<input type="text" name="medication"/>&nbsp;
 					<span>
-						<button>Sun</button>
-						<button>Mon</button>
-						<button>Tue</button>
-						<button>Wed</button>
-						<button>Thu</button>
-						<button>Fri</button>
-						<button>Sat</button>
+						<button onClick={this.handlers.dayClick} name="Sunday">Sun</button>
+						<button onClick={this.handlers.dayClick} name="Monday">Mon</button>
+						<button onClick={this.handlers.dayClick} name="Tuesday">Tue</button>
+						<button onClick={this.handlers.dayClick} name="Wednesday">Wed</button>
+						<button onClick={this.handlers.dayClick} name="Thursday">Thu</button>
+						<button onClick={this.handlers.dayClick} name="Friday">Fri</button>
+						<button onClick={this.handlers.dayClick} name="Saturday">Sat</button>
 					</span>&nbsp;
 					<input type="time" name="Time"/>
 					<input type="submit"/>
@@ -25,13 +37,18 @@ class MedForm extends React.Component {
 	}
 }
 
-// let mapStateToProps = (state, props) => {
-// 	return {
-// 		cheeses: state.cheeses
-// 	};
-// };
 
-// let Container = connect(mapStateToProps)(CheeseList);
-// module.exports = Container;
+let mapStateToProps = (state, props) => {
+	return {
+		sunFlag: state.sunFlag,
+		monFlag: state.monFlag,
+		tueFlag: state.tueFlag,
+		wedFlag: state.wedFlag,
+		thuFlag: state.thuFlag,
+		friFlag: state.friFlag,
+		satFlag: state.satFlag
+	};
+};
 
-export default MedForm;
+let Container = connect(mapStateToProps)(MedForm);
+export default Container;

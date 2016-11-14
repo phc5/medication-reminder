@@ -12,7 +12,7 @@ class MedContainer extends React.Component {
 	render() {
 		return (<div>
 					<MedForm />
-					<MedList meds={this.props.meds}/>
+					<MedList />
 				</div>
 		)
 	}
