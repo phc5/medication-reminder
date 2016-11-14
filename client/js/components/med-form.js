@@ -9,10 +9,19 @@ class MedForm extends React.Component {
 	}
 	render() {
 		return <form>
-					<input type="text" name="medication"/>
-					<input type="text" name="days"/>
-					<input type="text" name="Time"/>
-				</form>
+					<input type="text" name="medication"/>&nbsp;
+					<span>
+						<button>Sun</button>
+						<button>Mon</button>
+						<button>Tue</button>
+						<button>Wed</button>
+						<button>Thu</button>
+						<button>Fri</button>
+						<button>Sat</button>
+					</span>&nbsp;
+					<input type="time" name="Time"/>
+					<input type="submit"/>
+			   </form>
 	}
 }
 

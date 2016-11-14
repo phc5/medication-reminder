@@ -1,7 +1,7 @@
 import actions from '../actions/medication';
 
 const initialState = {
-	medications: [],
+	medications: ["test", "state", "now"],
 	loading: false,
 	error: null
 }
