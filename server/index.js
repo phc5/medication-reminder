@@ -2,13 +2,13 @@ import 'babel-polyfill';
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt.js';
+import bcrypt from 'bcryptjs';
 import passport from 'passport';
 
-import User from './user-model';
+import User from '../models/user-model';
 
 const jsonParser = bodyParser.json();
-import BasicStrategy from 'passport-http'.BasicStrategy;
+import {BasicStrategy} from 'passport-http';
 
 const strategy = new BasicStrategy(function(username, password, callback) {
     User.findOne({
@@ -44,11 +44,6 @@ passport.use(strategy);
 
 const app = express();
 app.use(passport.initialize());
-
-const HOST = process.env.HOST;
-const PORT = process.env.PORT || 8080;
-
-console.log(`Server running in ${process.env.NODE_ENV} mode`);\
 
 app.use(express.static(process.env.CLIENT_PATH));
 
@@ -119,7 +114,7 @@ app.post('/user', jsonParser, function(req, res) {
                             message: 'Internal server error'
                         });
                     }
-                    return res.status(201).json({});
+                    return res.status(201).json("account created");
                 });
             });
         });
@@ -136,13 +131,23 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
     });
 });
 
-app.post('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
-    const medication = req.body.med;
+// add medication to a user's medication list
+// request body must include:
+// {
+//     "name": "medication name",
+//     "reminder": {
+//         "date": "Date (day of week",
+//         "time": "time",
+//         "taken", false
+//     }
+// }
+app.post('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
+    const medication = req.body;
     if (!medication.name) {
-        return res.status(422).json({message: 'Missing field: med'});
+        return res.status(422).json({message: 'Missing field: name'});
     }
     if (typeof(medication.name) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: med'});
+        return res.status(422).json({message: 'Incorrect field type: name'});
     }
     if (!medication.reminder.date) {
         return res.status(422).json({message: 'Missing field: reminder.date'});
@@ -156,23 +161,85 @@ app.post('/medication', passport.authenticate('basic', {session:false}), functio
     if (typeof(medication.reminder.time) !== 'string') {
         return res.status(422).json({message: 'Incorrect field type: reminder.time'});
     }
-    User.findOneAndUpdate({username: req.params.username}, {$push: {'medications': 
-        {medication: medication.name, 
-            date: medication.reminder.date, 
-            time: medication.reminder.time}
-        }, {new: true}, function(err, model) {console.log(err);}
-    });
+    User.findOneAndUpdate({username: req.user.username}, {$push: {'medications': 
+            {
+                name: medication.name, 
+                reminder:
+                    {
+                    date: medication.reminder.date, 
+                    time: medication.reminder.time,
+                    taken: medication.reminder.taken
+                    }
+            }
+        }}, {new: true}, function(err, medList) {
+                if (err) {
+                        return res.status(500).json({
+                            message: 'Internal server error'
+                        });
+                    }
+                    return res.status(201).json({medList});
+            }
+    );
 })
 
+// modify medication attributes
+app.put('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
+  const medication = req.body;
+    if (!medication.name) {
+        return res.status(422).json({message: 'Missing field: name'});
+    }
+    if (typeof(medication.name) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: name'});
+    }
+    if (!medication.reminder.date) {
+        return res.status(422).json({message: 'Missing field: reminder.date'});
+    }
+    if (typeof(medication.reminder.date) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: reminder.date'});
+    }
+    if (!medication.reminder.time) {
+        return res.status(422).json({message: 'Missing field: reminder.time'});
+    }
+    if (typeof(medication.reminder.time) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: reminder.time'});
+    }
+    User.findOneAndUpdate({username: req.user.username, medications.name: medication.name}, {$set: {"medications.$": 
+            {
+                name: medication.name, 
+                reminder:
+                    {
+                    date: medication.reminder.date, 
+                    time: medication.reminder.time,
+                    taken: medication.reminder.taken
+                    }
+            }
+        }}, {new: true}, function(err, medList) {
+                if (err) {
+                        return res.status(500).json({
+                            message: 'Internal server error'
+                        });
+                    }
+                    return res.status(201).json({medList});
+            }
+    );
+};
+
+
+
+const HOST = process.env.HOST;
+const PORT = process.env.PORT || 8080;
+
+console.log(`Server running in ${process.env.NODE_ENV} mode`);
 
 function runServer() {
-    return new Promise((resolve, reject) => {
-        app.listen(PORT, HOST, (err) => {
+    let databaseUri = process.env.DATABASE_URI || global.databaseUri || 'mongodb://localhost/medList';
+    mongoose.connect(databaseUri).then(function() {
+       app.listen(PORT, HOST, (err) => {
+
             if (err) {
                 console.error(err);
-                reject(err);
+                return(err);
             }
-
             const host = HOST || 'localhost';
             console.log(`Listening on ${host}:${PORT}`);
         });
