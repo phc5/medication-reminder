@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>{{name}}</title>
+<title>MedReminder App</title>
 
 <link rel="stylesheet" href="css/{{name}}.{{version}}{{#production}}.min{{/production}}.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -12,29 +12,63 @@
 <!-- Your HTML goes here -->
 
 <header class="main-header">
-  <li><a href="#" id="logo">LOGO</a></li>
+  <a href="#" id="logo">HOME</a>
 
 <ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#">Home</a></li>
-  <li role="presentation"><a href="#">Profile</a></li>
-  <li role="presentation"><a href="#">Getting Started</a></li>
-  <li role="presentation"><a href="#">SignUp</a></li>
-  <li role="presentation"><a href="#">Contact Us</a></li>
+  <li role="presentation" class="active"><a href="#profile">Profile</a></li>
+  <li role="presentation"><a href="#signupForm">SignUp</a></li>
+  <li role="presentation"><a href="#contactUs">Contact Us</a></li>
 </ul>
 </header>
 
+<h1>LOGIN</h1>
+  <form id="loginForm">
+    <div class="form-group">
+        <input type="text" name="username" id="username" class="form-control input-sm" placeholder="Username">
+    </div>
+    <div class="row">
+      <div class="col-xs-6 col-sm-6 col-md-6">
+        <div class="form-group">
+          <input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password">
+        </div>
+      </div>
+    </div>
+    <input type="submit" value="Login" class="btn btn-info btn-block">
+  </form>
 
-<form>
-  <div id="emailControl" class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-  <div id="passwordControl" class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-  </div>
-</form>
+
+<!--signup form-->
+
+<div class="span3">
+  <h2>Sign Up</h2>
+    <form id="signupForm">
+      <div class="row">
+        <div class="col-xs-6 col-md-6">
+          <input type="text" name="firstname" value="" class="form-control input-sm" placeholder="First Name"  />
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <input type="text" name="lastname" value="" class="form-control input-sm" placeholder="Last Name"  />
+        </div>
+      </div>
+        <input type="text" name="username" value="" class="form-control input-sm" placeholder="Username"  />
+        <input type="text" name="email" value="" class="form-control input-sm" placeholder="Email Address"  />
+        <input type="password" name="password" value="" class="form-control input-sm" placeholder="Password"  />
+        <input type="password" name="confirm_password" value="" class="form-control input-sm" placeholder="Confirm Password"  />
+        <input type="submit" value="Sign Up" class="btn btn-info btn-block">
+    </form>
+</div>
+
+<div id="profile">
+  <p>Let's be honest, there are times when you accidentally forget to take your medication.  I know I have.  This app is designed to make our lives easier by setting a reminder to take all of your medications at any time given.  It also keeps the medication list handy where you can take it to your doctor's appointment and won't have to memorize any names that are difficult to pronouce.  If you fill that you can benefit from this, look no further, just click on Sign Up and let's get started</p>
+</div>
+
+<div id="signupForm">
+</div>
+
+<div id="contactUs">
+  <p>If you have any questions, please contact us at medireminder@example.com</p>
+</div>
+
 
 <script src="js/{{name}}.{{version}}{{#production}}.min{{/production}}.js"></script>
 

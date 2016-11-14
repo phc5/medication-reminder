@@ -1,29 +1,36 @@
+body {
+  background: url('med.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
 .nav-pills {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-end;
 }
 
 form {
   max-width: 450px;
-  max-height: 450px;
-  margin: 100px auto;
-  border: 2px solid black;
+  margin: auto auto;
 }
 
 .form-group {
-  width: 400px;
-  margin: 50px auto;
+  display: inline-block;
+  text-align: center;
 }
 
-#emailControl {
-  margin-top: 180px;
+input {
+  margin: 10px;
 }
 
-#passwordControl {
-  margin-top: 20px;
-  margin-bottom: 40px;
+#signupForm, h2 {
+  margin-top: 100px;
 }
 
-
+h1, h2 {
+  text-align: center;
+}
 
 
