@@ -8,6 +8,14 @@ const clickDay = (day) => {
 	};
 };
 
+const SUBMIT_FORM = "SUBMIT_FORM";
+const submitForm = (med) => {
+	return {
+		type: SUBMIT_FORM,
+		medications: med
+	}
+}
+
 const FETCH_MEDICATION_REQUEST = "FETCH_MEDICATION_REQUEST";
 const fetchMedicationRequest = () => {
 	return {
@@ -54,6 +62,9 @@ const fetchMedications = () => {
 
 exports.CLICK_DAY = CLICK_DAY
 exports.clickDay = clickDay
+
+exports.SUBMIT_FORM = SUBMIT_FORM
+exports.submitForm = submitForm
 
 exports.FETCH_MEDICATION_REQUEST = FETCH_MEDICATION_REQUEST
 exports.fetchMedicationRequest = fetchMedicationRequest

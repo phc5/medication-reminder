@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import Medicine from './medicine';
 // import actions from '../actions/medication';
 
 class MedList extends React.Component {
@@ -10,12 +11,7 @@ class MedList extends React.Component {
 	render() {
 		let array = this.props.meds.map((med, index) => {
 			return (
-				<li key={index}>
-					<span>{med}&nbsp;</span>
-					<span>Days of the Week&nbsp;</span>
-					<span>Time&nbsp;</span>
-					<button className="delete">Delete</button>
-				</li>
+				<Medicine key={index} medicine={med} />
 			);
 		});
 		return <div><ul>{array}</ul></div>

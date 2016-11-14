@@ -50,6 +50,10 @@ const gameReducer = (state, action) => {
 				state.satFlag = !state.satFlag;
 				break;
 		}
+	} else if (action.type === actions.SUBMIT_FORM) {
+		console.log(action.medications);
+		state.medications.push(action.medications);
+		console.log(state.medications);
 	}
 
 	return state;
