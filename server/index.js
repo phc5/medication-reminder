@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import passport from 'passport';
 
 import User from '../models/user-model';
+import Medications from '../models/medication-model';
 
 const jsonParser = bodyParser.json();
 import {BasicStrategy} from 'passport-http';
@@ -134,56 +135,59 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
 // add medication to a user's medication list
 // request body must include:
 // {
+    // userId: ObjectID,
 //     "name": "medication name",
-//     "reminder": {
-//         "date": "Date (day of week",
-//         "time": "time",
-//         "taken", false
+    // "date": "Date (day of week",
+    // "time": "time",
+    // "taken", false
 //     }
 // }
 app.post('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
-    if (!medication.name) {
+    if (!medication.userId) {
+        return res.status(422).json({message: 'Missing field: userId'});
+    }
+     if (!medication.name) {
         return res.status(422).json({message: 'Missing field: name'});
     }
     if (typeof(medication.name) !== 'string') {
         return res.status(422).json({message: 'Incorrect field type: name'});
     }
-    if (!medication.reminder.date) {
-        return res.status(422).json({message: 'Missing field: reminder.date'});
+    if (!medication.date) {
+        return res.status(422).json({message: 'Missing field: date'});
     }
-    if (typeof(medication.reminder.date) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: reminder.date'});
+    if (typeof(medication.date) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: date'});
     }
-    if (!medication.reminder.time) {
-        return res.status(422).json({message: 'Missing field: reminder.time'});
+    if (!medication.time) {
+        return res.status(422).json({message: 'Missing field: time'});
     }
-    if (typeof(medication.reminder.time) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: reminder.time'});
+    if (typeof(medication.time) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: time'});
     }
-    User.findOneAndUpdate({username: req.user.username}, {$push: {'medications': 
-            {
+    if (typeof(medication.taken) !== 'boolean') {
+        return res.status(422).json({message: 'Incorrect field type: taken'});
+    }
+    Medications.create({
+                userId: medication.userId,
                 name: medication.name, 
-                reminder:
-                    {
-                    date: medication.reminder.date, 
-                    time: medication.reminder.time,
-                    taken: medication.reminder.taken
-                    }
-            }
-        }}, {new: true}, function(err, medList) {
+                date: medication.date, 
+                time: medication.time,
+                taken: medication.taken
+            }, function(err, med) {
                 if (err) {
-                        return res.status(500).json({
-                            message: 'Internal server error'
-                        });
-                    }
-                    return res.status(201).json({medList});
+                    return res.status(500).json({
+                        message: 'Internal server error'
+                    });
+                }
+                return res.status(201).json({med});
             }
     );
 })
 
 // modify medication attributes
-app.put('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
+app.put('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
+    console.log(req.body);
   const medication = req.body;
     if (!medication.name) {
         return res.status(422).json({message: 'Missing field: name'});
@@ -203,7 +207,7 @@ app.put('/medication', passport.authenticate('basic', {session:false}), function
     if (typeof(medication.reminder.time) !== 'string') {
         return res.status(422).json({message: 'Incorrect field type: reminder.time'});
     }
-    User.findOneAndUpdate({username: req.user.username, medications.name: medication.name}, {$set: {"medications.$": 
+    User.findOneAndUpdate({username: req.user.username, medications: {name: medication.name}}, {$set: {"medications.$.name": 
             {
                 name: medication.name, 
                 reminder:
@@ -213,8 +217,9 @@ app.put('/medication', passport.authenticate('basic', {session:false}), function
                     taken: medication.reminder.taken
                     }
             }
-        }}, {new: true}, function(err, medList) {
+        }}, function(err, medList) {
                 if (err) {
+                    console.log(err);
                         return res.status(500).json({
                             message: 'Internal server error'
                         });
@@ -222,7 +227,7 @@ app.put('/medication', passport.authenticate('basic', {session:false}), function
                     return res.status(201).json({medList});
             }
     );
-};
+});
 
 
 
