@@ -79,6 +79,7 @@ app.post('/user', jsonParser, function(req, res) {
     }
     User.findOne({username: username}).then((result) => {
         if(result) {
+            console.log(result);
             return res.status(409).json({message: "Username already taken."});
         }
         if (!('password' in req.body)) {
@@ -128,23 +129,76 @@ app.post('/user', jsonParser, function(req, res) {
 });
 
 // change username or password
-// app.put
+// requires:
+// {
+//     "username": desired username,
+//     "password": desired password
+// }
+app.put('/user', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
+    const user = req.user;
+    const updateUser = req.body;
+    console.log("user auth info: ", user);
+    console.log("updateUser ", updateUser);
 
-// app.delete('/user', passport.authenticate('basic', {session:false}), function(req, res) {
-//     if (!medication._id) {
-//         return res.status(422).json({message: 'Missing field: id'});
-//     }
-//     if (typeof(medication._id) !== 'string') {
-//         return res.status(422).json({message: 'Incorrect field type: id'});
-//     }
+    let password = updateUser.password;
+    if (typeof password !== 'string') {
+        return res.status(422).json({
+            message: 'Incorrect field type: password'
+        });
+    }
+    password = password.trim();
+    if (password === '') {
+        return res.status(422).json({
+            message: 'Incorrect field length: password'
+        });
+    }
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err) {
+            return res.status(500).json({
+                message: 'Internal server error'
+            });
+        }
+        bcrypt.hash(password, salt, function(err, hash) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Internal server error'
+                });
+            }
+            User.findOneAndUpdate({username: user.username}, {$set: { 
+                        username: updateUser.username,
+                        password: hash
+                    }}, 
+                    function(err, med) {
+                        if (err) {
+                            return res.status(500).json({message: 'Internal server error'});
+                        }
+                        if(!med) return res.status(400).json("no entries found")
+                        return res.status(202).json("account updated");
+                    }
+            );
+        });
+    });
+});
 
+// delete user account and associated medications
+// requires authentication
+app.delete('/user', passport.authenticate('basic', {session:false}), function(req, res) {
+    const user = req.user;
+    User.findOne({username: user.username}).exec(function(err, entry) {
+        if (err) return res.status(500).json(err);
+        if(JSON.stringify(entry._id) != JSON.stringify(user._id)) {
+            return res.status(400).json("_id invalid");
+        }
+        User.remove({username: user.username}, function(err, count) {
+        if (err) return res.status(501).json(err);
+        Medications.remove({userId: user._id}, function(err, count) {
+            if (err) return res.status(501).json(err);
+            return res.status(200).json("account deleted");
 
-//     Medications.remove({_id: req.body._id}, function(err, count) {
-//         if (err) return res.status(501).json(err);
-//         if (count.result.n == 0) return res.status(400).json("no entries match medication id sent");
-//         res.status(200).json(count.result.n + " object(s) removed");
-//     });
-// });
+            });
+        })
+    });
+});
 
 
 //get user medication data; requires authentication
@@ -157,8 +211,7 @@ app.post('/user', jsonParser, function(req, res) {
 //     "taken", false
 // }
 app.get('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
-    console.log("req.user!!!! ", req.user);
-    User.find().select('_id username').exec(function(err, meds) {
+    Medications.find({userId: req.user._id}).exec(function(err, meds) {
         if (err) {
             return res.status(500).json({message: 'Internal Server Errror'});
         }
@@ -200,7 +253,6 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
         return res.status(422).json({message: 'Incorrect field type: taken'});
     }
     User.findOne({username: req.user.username}).exec(function(err, entry) {
-        console.log("Username found: ", entry);
         Medications.create({
                 userId: entry._id,
                 name: medication.name, 
