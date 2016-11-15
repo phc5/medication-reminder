@@ -129,13 +129,18 @@ app.post('/user', jsonParser, function(req, res) {
 });
 
 // change username or password
+// requires:
+// {
+//     "username": desired username,
+//     "password": desired password
+// }
 app.put('/user', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const user = req.user;
     const updateUser = req.body;
     console.log("user auth info: ", user);
     console.log("updateUser ", updateUser);
 
-    let password = user.password;
+    let password = updateUser.password;
     if (typeof password !== 'string') {
         return res.status(422).json({
             message: 'Incorrect field type: password'
