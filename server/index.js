@@ -49,6 +49,11 @@ app.use(passport.initialize());
 app.use(express.static(process.env.CLIENT_PATH));
 
 //create new username and password
+// requires
+// {
+//     username: new username,
+//     password: new password
+// }
 app.post('/user', jsonParser, function(req, res) {
     if (!req.body) {
         return res.status(400).json({
@@ -122,6 +127,9 @@ app.post('/user', jsonParser, function(req, res) {
     });
 });
 
+// change username or password
+// app.put
+
 // app.delete('/user', passport.authenticate('basic', {session:false}), function(req, res) {
 //     if (!medication._id) {
 //         return res.status(422).json({message: 'Missing field: id'});
@@ -140,6 +148,14 @@ app.post('/user', jsonParser, function(req, res) {
 
 
 //get user medication data; requires authentication
+// data will be returned as:
+// {
+//     "userId": User ObjectID,
+//     "name": "medication name",
+//     "date": "Date (day of week)",
+//     "time": "time",
+//     "taken", false
+// }
 app.get('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
     console.log("req.user!!!! ", req.user);
     User.find().select('_id username').exec(function(err, meds) {
@@ -154,7 +170,6 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
 // add medication to a user's medication list
 // request body must include:
 // {
-//     "userId": User ObjectID,
 //     "name": "medication name",
 //     "date": "Date (day of week)",
 //     "time": "time",
@@ -205,6 +220,14 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
 });
 
 // modify medication attributes
+// must send in full medication object:
+// {
+//     "userId": User ObjectID,
+//     "name": "medication name",
+//     "date": "Date (day of week)",
+//     "time": "time",
+//     "taken", false
+// }
 app.put('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
   const medication = req.body;
   console.log(medication);
@@ -244,6 +267,11 @@ app.put('/medication', jsonParser, passport.authenticate('basic', {session:false
     );
 });
 
+// delete medication
+// requires
+// {
+//     _id: medication ObjectID
+// }
 app.delete('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
     if (!medication._id) {
@@ -254,7 +282,7 @@ app.delete('/medication', jsonParser, passport.authenticate('basic', {session:fa
     }
 
 
-    Medications.remove({_id: req.body._id}, function(err, count) {
+    Medications.remove({_id: medication._id}, function(err, count) {
         if (err) return res.status(501).json(err);
         if (count.result.n == 0) return res.status(400).json("no entries match medication id sent");
         res.status(200).json(count.result.n + " object(s) removed");
