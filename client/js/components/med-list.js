@@ -11,7 +11,7 @@ class MedList extends React.Component {
 	render() {
 		let array = this.props.meds.map((med, index) => {
 			return (
-				<Medicine key={index} medicine={med} />
+				<Medicine key={index} medicine={med[0]} days={med[1]} time={med[2]} />
 			);
 		});
 		return <div><ul>{array}</ul></div>

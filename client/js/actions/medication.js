@@ -9,17 +9,19 @@ const clickDay = (day) => {
 };
 
 const SUBMIT_FORM = "SUBMIT_FORM";
-const submitForm = (med) => {
+const submitForm = (med, time) => {
 	return {
 		type: SUBMIT_FORM,
-		medications: med
+		medication: med,
+		time: time
 	}
 }
 
 const DELETE_BUTTON = "DELETE_BUTTON";
-const deleteButton = () => {
+const deleteButton = (med) => {
 	return {
-		type: DELETE_BUTTON
+		type: DELETE_BUTTON,
+		medication: med
 	}
 }
 
