@@ -122,8 +122,26 @@ app.post('/user', jsonParser, function(req, res) {
     });
 });
 
+// app.delete('/user', passport.authenticate('basic', {session:false}), function(req, res) {
+//     if (!medication._id) {
+//         return res.status(422).json({message: 'Missing field: id'});
+//     }
+//     if (typeof(medication._id) !== 'string') {
+//         return res.status(422).json({message: 'Incorrect field type: id'});
+//     }
+
+
+//     Medications.remove({_id: req.body._id}, function(err, count) {
+//         if (err) return res.status(501).json(err);
+//         if (count.result.n == 0) return res.status(400).json("no entries match medication id sent");
+//         res.status(200).json(count.result.n + " object(s) removed");
+//     });
+// });
+
+
 //get user medication data; requires authentication
 app.get('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
+    console.log("req.user!!!! ", req.user);
     User.find().select('_id username').exec(function(err, meds) {
         if (err) {
             return res.status(500).json({message: 'Internal Server Errror'});
@@ -132,21 +150,19 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
     });
 });
 
+
 // add medication to a user's medication list
 // request body must include:
 // {
-    // userId: ObjectID,
+//     "userId": User ObjectID,
 //     "name": "medication name",
-    // "date": "Date (day of week",
-    // "time": "time",
-    // "taken", false
-//     }
+//     "date": "Date (day of week)",
+//     "time": "time",
+//     "taken", false
 // }
 app.post('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
-    if (!medication.userId) {
-        return res.status(422).json({message: 'Missing field: userId'});
-    }
+    console.log("req.user!!!! ", req.user);
      if (!medication.name) {
         return res.status(422).json({message: 'Missing field: name'});
     }
@@ -168,8 +184,10 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
     if (typeof(medication.taken) !== 'boolean') {
         return res.status(422).json({message: 'Incorrect field type: taken'});
     }
-    Medications.create({
-                userId: medication.userId,
+    User.findOne({username: req.user.username}).exec(function(err, entry) {
+        console.log("Username found: ", entry);
+        Medications.create({
+                userId: entry._id,
                 name: medication.name, 
                 date: medication.date, 
                 time: medication.time,
@@ -182,54 +200,66 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
                 }
                 return res.status(201).json({med});
             }
-    );
-})
+        );
+    })
+});
 
 // modify medication attributes
 app.put('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
-    console.log(req.body);
   const medication = req.body;
+  console.log(medication);
     if (!medication.name) {
         return res.status(422).json({message: 'Missing field: name'});
     }
     if (typeof(medication.name) !== 'string') {
         return res.status(422).json({message: 'Incorrect field type: name'});
     }
-    if (!medication.reminder.date) {
-        return res.status(422).json({message: 'Missing field: reminder.date'});
+    if (!medication.date) {
+        return res.status(422).json({message: 'Missing field: date'});
     }
-    if (typeof(medication.reminder.date) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: reminder.date'});
+    if (typeof(medication.date) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: date'});
     }
-    if (!medication.reminder.time) {
-        return res.status(422).json({message: 'Missing field: reminder.time'});
+    if (!medication.time) {
+        return res.status(422).json({message: 'Missing field: time'});
     }
-    if (typeof(medication.reminder.time) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: reminder.time'});
+    if (typeof(medication.time) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: time'});
     }
-    User.findOneAndUpdate({username: req.user.username, medications: {name: medication.name}}, {$set: {"medications.$.name": 
-            {
+    Medications.findOneAndUpdate({_id: medication._id, userId: req.user._id}, {$set: { 
+                userId: medication.userId,
                 name: medication.name, 
-                reminder:
-                    {
-                    date: medication.reminder.date, 
-                    time: medication.reminder.time,
-                    taken: medication.reminder.taken
-                    }
-            }
-        }}, function(err, medList) {
+                date: medication.date, 
+                time: medication.time,
+                taken: medication.taken
+            }}, 
+            {new: true}, 
+            function(err, med) {
                 if (err) {
-                    console.log(err);
-                        return res.status(500).json({
-                            message: 'Internal server error'
-                        });
-                    }
-                    return res.status(201).json({medList});
+                    return res.status(500).json({message: 'Internal server error'});
+                }
+                if(!med) return res.status(400).json("no entries found")
+                return res.status(201).json({med});
             }
     );
 });
 
+app.delete('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
+    const medication = req.body;
+    if (!medication._id) {
+        return res.status(422).json({message: 'Missing field: id'});
+    }
+    if (typeof(medication._id) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: id'});
+    }
 
+
+    Medications.remove({_id: req.body._id}, function(err, count) {
+        if (err) return res.status(501).json(err);
+        if (count.result.n == 0) return res.status(400).json("no entries match medication id sent");
+        res.status(200).json(count.result.n + " object(s) removed");
+    });
+});
 
 const HOST = process.env.HOST;
 const PORT = process.env.PORT || 8080;
