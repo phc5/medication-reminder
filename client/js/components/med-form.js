@@ -2,14 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
 
-let createHandlers = (dispatch) => {
+let createHandlers = (dispatch, props) => {
 	let dayClick = (event) => {
 		event.preventDefault();
 		dispatch(actions.clickDay(event.target.name));
 	}
 	let formSubmit = (event) => {
 		event.preventDefault();
-		dispatch(actions.submitForm(event.target.medication.value));
+		dispatch(actions.submitForm(event.target.medication.value, event.target.time.value));
 	}
 	return {
 		dayClick,
@@ -21,7 +21,7 @@ let createHandlers = (dispatch) => {
 class MedForm extends React.Component {
 	constructor(props) {
 	    super(props);
-	    this.handlers = createHandlers(this.props.dispatch);
+	    this.handlers = createHandlers(this.props.dispatch, props);
 	}
 	render() {
 		let sunClass = this.props.sunFlag ? 'highlight' : 'base';
@@ -42,7 +42,7 @@ class MedForm extends React.Component {
 						<button type="button" className={friClass} onClick={this.handlers.dayClick} name="Friday">Fri</button>
 						<button type="button" className={satClass} onClick={this.handlers.dayClick} name="Saturday">Sat</button>
 					</span>&nbsp;
-					<input type="time" name="Time"/>
+					<input type="time" name="time"/>
 					<input type="submit"/>
 			   </form>
 	}

@@ -1,7 +1,7 @@
 import actions from '../actions/medication';
 
 const initialState = {
-	medications: ["test", "state", "now"],
+	medications: [["test", "Mon Wed Fri", "8:00 PM"], ["state", "Tue, Thurs", "1:00 PM"], ["now", "Sun Sat", "10:00 AM"]],
 	loading: false,
 	error: null, 
 	sunFlag: false,
@@ -51,9 +51,21 @@ const gameReducer = (state, action) => {
 				break;
 		}
 	} else if (action.type === actions.SUBMIT_FORM) {
-		console.log(action.medications);
-		state.medications.push(action.medications);
-		console.log(state.medications);
+		let days = [];
+		if (state.sunFlag) {days.push("Sun")};
+		if (state.monFlag) {days.push("Mon")};
+		if (state.tueFlag) {days.push("Tue")};
+		if (state.wedFlag) {days.push("Wed")};
+		if (state.thuFlag) {days.push("Thu")};
+		if (state.friFlag) {days.push("Fri")};
+		if (state.satFlag) {days.push("Sat")};
+		state.medications.push([action.medication, days, action.time]);
+	} else if (action.type === actions.DELETE_BUTTON) {
+		for (let i = 0; i < state.medications.length; i++) {
+			if (state.medications[i].indexOf(action.medication) > -1) {
+				state.medications.splice(i,1);
+			}
+		}
 	}
 
 	return state;
