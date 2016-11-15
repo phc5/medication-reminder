@@ -51,21 +51,40 @@ const gameReducer = (state, action) => {
 				break;
 		}
 	} else if (action.type === actions.SUBMIT_FORM) {
+		console.log("Before push : " + state.medications);
 		let days = [];
-		if (state.sunFlag) {days.push("Sun")};
-		if (state.monFlag) {days.push("Mon")};
-		if (state.tueFlag) {days.push("Tue")};
-		if (state.wedFlag) {days.push("Wed")};
-		if (state.thuFlag) {days.push("Thu")};
-		if (state.friFlag) {days.push("Fri")};
-		if (state.satFlag) {days.push("Sat")};
-		state.medications.push([action.medication, days, action.time]);
-	} else if (action.type === actions.DELETE_BUTTON) {
-		for (let i = 0; i < state.medications.length; i++) {
-			if (state.medications[i].indexOf(action.medication) > -1) {
-				state.medications.splice(i,1);
-			}
+		if (state.sunFlag) {
+			days.push("Sun");
+			state.sunFlag = false;
 		}
+		if (state.monFlag) {
+			days.push("Mon");
+			state.monFlag = false;
+		}
+		if (state.tueFlag) {
+			days.push("Tue");
+			state.tueFlag = false;
+		}
+		if (state.wedFlag) {
+			days.push("Wed");
+			state.wedFlag = false;
+		}
+		if (state.thuFlag) {
+			days.push("Thu");
+			state.thuFlag = false;
+		}
+		if (state.friFlag) {
+			days.push("Fri");
+			state.friFlag = false;
+		}
+		if (state.satFlag) {
+			days.push("Sat");
+			state.satFlag = false;
+		}
+		state.medications = state.medications.concat([[action.medication, days, action.time]]);
+		console.log("After push : " + state.medications);
+	} else if (action.type === actions.DELETE_BUTTON) {
+		state.medications = state.medications.filter(med => med[0] != action.medication);
 	}
 
 	return state;

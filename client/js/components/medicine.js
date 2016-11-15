@@ -19,7 +19,7 @@ class Medicine extends React.Component {
 	}
 	render() {
 		return (
-			<li key={this.props.index}>
+			<li>
 				<span>{this.props.medicine}&nbsp;</span>
 				<span>{this.props.days}&nbsp;</span>
 				<span>{this.props.time}&nbsp;</span>
