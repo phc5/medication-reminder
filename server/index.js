@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import passport from 'passport';
+import schedule from 'node-schedule';
 
 import User from '../models/user-model';
 import Medications from '../models/medication-model';
@@ -219,13 +220,33 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
     });
 });
 
+let reminders = [];
+// let reminders = Medications.find({}).exec(function(data) {
+//     if(!data) return [];
+//     return data.map(entry => {
+//         let time = new Date(entry.firstReminder).split(":");
+//         time = "".concat(time.getHours(), " ", time.getMinutes(), " ", time.getSeconds());
+//         return schedule.scheduleJob(time.concat(" ","*"," ","*"," ",entry.day[0]), function() {
+//             console.log("running scheduler");
+//             //generate email
+//             Mediations.findOneAndUpdate({_id: entry._id}, {
+//                 $set: {
+//                     nextReminder: new Date((new Date).getTime() + 86400000)
+//                     }
+//                 }, function(err) {
+//                     console.log(err)
+//                 }
+//             );
+//         });
+//     });
+// });
 
 // add medication to a user's medication list
 // request body must include:
 // {
 //     "name": "medication name",
-//     "date": "Date (day of week)",
-//     "time": "time",
+//     "firstReminder": unix time of first reminder,
+//     "days": days of week for reminder - as array,
 //     "taken", false
 // }
 app.post('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
@@ -237,34 +258,58 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
     if (typeof(medication.name) !== 'string') {
         return res.status(422).json({message: 'Incorrect field type: name'});
     }
-    if (!medication.date) {
-        return res.status(422).json({message: 'Missing field: date'});
+    if (!medication.firstReminder) {
+        return res.status(422).json({message: 'Missing field: firstReminder'});
     }
-    if (typeof(medication.date) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: date'});
+    if (typeof(medication.firstReminder) !== 'number') {
+        return res.status(422).json({message: 'Incorrect field type: firstReminder'});
     }
-    if (!medication.time) {
-        return res.status(422).json({message: 'Missing field: time'});
+    if (!medication.days) {
+        return res.status(422).json({message: 'Missing field: days'});
     }
-    if (typeof(medication.time) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: time'});
+    if (typeof(medication.days) !== 'object') {
+        return res.status(422).json({message: 'Incorrect field type: days'});
     }
     if (typeof(medication.taken) !== 'boolean') {
         return res.status(422).json({message: 'Incorrect field type: taken'});
     }
     User.findOne({username: req.user.username}).exec(function(err, entry) {
+        if(err) return res.status(500).json({
+                        message: 'Internal server error'
+                    });
         Medications.create({
                 userId: entry._id,
                 name: medication.name, 
-                date: medication.date, 
-                time: medication.time,
-                taken: medication.taken
+                firstReminder: medication.firstReminder,
+                days: medication.days,
+                taken: medication.taken,
+                nextReminder: 0
             }, function(err, med) {
+                console.log("med: ", med);
                 if (err) {
                     return res.status(500).json({
-                        message: 'Internal server error'
+                        message: 'Internal server error happening here'
                     });
                 }
+                console.log("time: ", new Date(med.firstReminder));
+                let time = new Date(med.firstReminder);
+                time = "".concat(time.getHours(), " ", time.getMinutes(), " ", time.getSeconds());
+                console.log("reminders: ", reminders);
+                reminders.push(
+                        schedule.scheduleJob(time.concat(" ","*"," ","*"," ",med.days[0]), function() {
+                        console.log("running scheduler");
+                        //generate email
+                        Mediations.findOneAndUpdate({_id: med._id}, {
+                            $set: {
+                                nextReminder: new Date((new Date).getTime() + 86400000)
+                                }
+                            }, function(err) {
+                                console.log(err)
+                            }
+                        );
+                    })
+                );
+                console.log("reminders: ", reminders[0]);
                 return res.status(201).json({med});
             }
         );
