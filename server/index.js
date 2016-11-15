@@ -129,7 +129,51 @@ app.post('/user', jsonParser, function(req, res) {
 });
 
 // change username or password
-// app.put
+app.put('/user', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
+    const user = req.user;
+    const updateUser = req.body;
+    console.log("user auth info: ", user);
+    console.log("updateUser ", updateUser);
+
+    let password = user.password;
+    if (typeof password !== 'string') {
+        return res.status(422).json({
+            message: 'Incorrect field type: password'
+        });
+    }
+    password = password.trim();
+    if (password === '') {
+        return res.status(422).json({
+            message: 'Incorrect field length: password'
+        });
+    }
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err) {
+            return res.status(500).json({
+                message: 'Internal server error'
+            });
+        }
+        bcrypt.hash(password, salt, function(err, hash) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Internal server error'
+                });
+            }
+            User.findOneAndUpdate({username: user.username}, {$set: { 
+                        username: updateUser.username,
+                        password: hash
+                    }}, 
+                    function(err, med) {
+                        if (err) {
+                            return res.status(500).json({message: 'Internal server error'});
+                        }
+                        if(!med) return res.status(400).json("no entries found")
+                        return res.status(202).json("account updated");
+                    }
+            );
+        });
+    });
+});
 
 // delete user account and associated medications
 // requires authentication
