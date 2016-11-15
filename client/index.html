@@ -3,11 +3,77 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>{{name}}</title>
+<title>MedReminder App</title>
+
 
 <link rel="stylesheet" href="css/{{name}}.{{version}}{{#production}}.min{{/production}}.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="css/style.css">
 
 <!-- Your HTML goes here -->
 
+<header class="main-header">
+
+<!--navigation-->
+  <ul class="nav nav-pills">
+    <li role="presentation" class="active"><a href="#" id="logo">HOME</a></li>
+    <li role="presentation"><a href="#profile">Profile</a></li>
+    <li role="presentation"><a href="#signupForm">SignUp</a></li>
+    <li role="presentation"><a href="#contactUs">Contact Us</a></li>
+  </ul>
+  </header>
+
+<body>
+<!--login form-->
+  <form id="loginForm">
+
+    <div id="border-form" class="form-group">
+    <h1>LOGIN</h1>
+        <input type="text" name="username" id="username" class="form-control input-sm" placeholder="Username" />
+        <input type="password" name="password" value="" class="form-control input-sm" placeholder="Password"  />
+        <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+        <input type="submit" value="Login" class="btn btn-info btn-block">
+    </div>
+  </form>
+
+
+<!--signup form-->
+
+
+    <form id="signupForm">
+      <div id="border-signup">
+      <h1>Sign Up</h1>
+        <input type="text" name="firstname" value="" class="form-control input-sm" placeholder="First Name"  />
+        <input type="text" name="lastname" value="" class="form-control input-sm" placeholder="Last Name"  />
+        <input type="text" name="username" value="" class="form-control input-sm" placeholder="Username"  />
+        <input type="text" name="email" value="" class="form-control input-sm" placeholder="Email Address"  />
+        <input type="password" name="password" value="" class="form-control input-sm" placeholder="Password"  />
+        <input type="password" name="confirm_password" value="" class="form-control input-sm" placeholder="Confirm Password"  />
+        <label><input type="checkbox" name="terms"> I agree with the <a href="#">Terms and Conditions</a>.</label>
+        <input type="submit" value="Sign Up" class="btn btn-info btn-block">
+      </div>
+    </form>
+
+
+<!--profile section that should open and close, similar to hotncold what section"-->
+    <div id="profile">
+        <div class="content">
+          <h3>What is this about?</h3>
+          <div>
+            <p>Let's be honest, there are times when you accidentally forget to take your medication.  I know I have.  This app is designed to make our lives easier by setting a reminder to take all of your medications at any given time.  It also keeps the medication list handy where you can take it to your doctor's appointment and won't have to memorize any names that are difficult to pronouce.  If you fill that you can benefit from this, look no further, just click on Sign Up and let's get started</p>
+            <button class="closeButton">Close</button>
+          </div>
+        </div>
+    </div>
+
+<!--contact us section-->
+    <div id="contactUs">
+      <p>If you have any questions, please contact us at medi_reminder@example.com</p>
+      <button class="closeButton">Close</button>
+    </div>
+
+  </body>
 <script src="js/{{name}}.{{version}}{{#production}}.min{{/production}}.js"></script>
 
+<div id="app"></div>
+<script src="js/{{name}}.{{version}}{{#production}}.min{{/production}}.js"></script>
