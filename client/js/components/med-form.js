@@ -33,8 +33,9 @@ class MedForm extends React.Component {
 		let satClass = this.props.satFlag ? 'highlight' : 'base';
 		let sunClass = this.props.sunFlag ? 'highlight' : 'base';
 		return <form className="medicine" onSubmit={this.handlers.formSubmit} autoComplete="off">
-					<label htmlFor="medication">Name of Medication</label>
-					<input type="text" name="medication"/>&nbsp;
+					<label htmlFor="medication">Name of Medication</label>&nbsp;
+					<input type="text" required="required" name="medication" pattern="[a-zA-Z\s0-9]*"/>&nbsp;
+					<label>Days of the Week</label>&nbsp;
 					<span>
 						<button type="button" className={monClass} onClick={this.handlers.dayClick} name="Monday">Mon</button>
 						<button type="button" className={tueClass} onClick={this.handlers.dayClick} name="Tuesday">Tue</button>
@@ -44,8 +45,8 @@ class MedForm extends React.Component {
 						<button type="button" className={satClass} onClick={this.handlers.dayClick} name="Saturday">Sat</button>
 						<button type="button" className={sunClass} onClick={this.handlers.dayClick} name="Sunday">Sun</button>
 					</span>&nbsp;
-					<label htmlFor="time">Time</label>
-					<input type="time" name="time"/>&nbsp;
+					<label htmlFor="time">Time</label>&nbsp;
+					<input type="time" name="time" required="required"/>&nbsp;
 					<input type="submit"/>
 			   </form>
 	}

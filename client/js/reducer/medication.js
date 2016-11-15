@@ -81,22 +81,9 @@ const gameReducer = (state, action) => {
 			days.push("Sat");
 			state.satFlag = false;
 		}
-		if (action.medication === null || action.medication === "" || days.length === 0 || action.time === "") {
-			if (action.medication === null || action.medication === "") {
-				alert("Please fill in the name field.");
-			} else if (days.length === 0) {
-				alert("Please select at least one day of the week.");
-			} else if (action.time === "") {
-				alert("Plesae fill in the time field.");
-			}
-		} else {
-			state.medications = state.medications.concat([[action.medication, days, action.time]]);
-			console.log("After push : " + state.medications);
-		}
-
+		state.medications = state.medications.concat([[action.medication, days, action.time]]);
 	} else if (action.type === actions.DELETE_BUTTON) {
 		state.medications = state.medications.filter(med => med[0] != action.medication);
-		console.log("After del : " + state.medications);
 	}
 
 	return state;
