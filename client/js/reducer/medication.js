@@ -1,7 +1,7 @@
 import actions from '../actions/medication';
 
 const initialState = {
-	medications: [["test", "Mon Wed Fri", "8:00 PM"], ["state", "Tue, Thurs", "1:00 PM"], ["now", "Sun Sat", "10:00 AM"]],
+	medications: [["test", "Mon Wed Fri", "8:00 PM"], ["state", "Tue Thurs", "1:00 PM"], ["now", "Sun Sat", "10:00 AM"]],
 	loading: false,
 	error: null, 
 	sunFlag: false,
@@ -82,7 +82,6 @@ const gameReducer = (state, action) => {
 			state.satFlag = false;
 		}
 		state.medications = state.medications.concat([[action.medication, days, action.time]]);
-		console.log("After push : " + state.medications);
 	} else if (action.type === actions.DELETE_BUTTON) {
 		state.medications = state.medications.filter(med => med[0] != action.medication);
 	}
