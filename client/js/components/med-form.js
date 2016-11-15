@@ -32,7 +32,7 @@ class MedForm extends React.Component {
 		let friClass = this.props.friFlag ? 'highlight' : 'base';
 		let satClass = this.props.satFlag ? 'highlight' : 'base';
 		let sunClass = this.props.sunFlag ? 'highlight' : 'base';
-		return <form onSubmit={this.handlers.formSubmit} autoComplete="off">
+		return <form className="medicine" onSubmit={this.handlers.formSubmit} autoComplete="off">
 					<input type="text" name="medication"/>&nbsp;
 					<span>
 						<button type="button" className={monClass} onClick={this.handlers.dayClick} name="Monday">Mon</button>
