@@ -16,6 +16,13 @@ const submitForm = (med) => {
 	}
 }
 
+const DELETE_BUTTON = "DELETE_BUTTON";
+const deleteButton = () => {
+	return {
+		type: DELETE_BUTTON
+	}
+}
+
 const FETCH_MEDICATION_REQUEST = "FETCH_MEDICATION_REQUEST";
 const fetchMedicationRequest = () => {
 	return {
@@ -65,6 +72,9 @@ exports.clickDay = clickDay
 
 exports.SUBMIT_FORM = SUBMIT_FORM
 exports.submitForm = submitForm
+
+exports.DELETE_BUTTON = DELETE_BUTTON
+exports.deleteButton = deleteButton
 
 exports.FETCH_MEDICATION_REQUEST = FETCH_MEDICATION_REQUEST
 exports.fetchMedicationRequest = fetchMedicationRequest
