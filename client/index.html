@@ -13,16 +13,17 @@
 
 <header class="main-header">
 
+<!--navigation-->
+  <ul class="nav nav-pills">
+    <li role="presentation" class="active"><a href="#" id="logo">HOME</a></li>
+    <li role="presentation"><a href="#profile">Profile</a></li>
+    <li role="presentation"><a href="#signupForm">SignUp</a></li>
+    <li role="presentation"><a href="#contactUs">Contact Us</a></li>
+  </ul>
+  </header>
 
-<ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#" id="logo">HOME</a></li>
-  <li role="presentation"><a href="#profile">Profile</a></li>
-  <li role="presentation"><a href="#signupForm">SignUp</a></li>
-  <li role="presentation"><a href="#contactUs">Contact Us</a></li>
-</ul>
-</header>
-
-
+<body>
+<!--login form-->
   <form id="loginForm">
 
     <div id="border-form" class="form-group">
@@ -52,17 +53,23 @@
       </div>
     </form>
 
-<div id="profile">
-  <p>Let's be honest, there are times when you accidentally forget to take your medication.  I know I have.  This app is designed to make our lives easier by setting a reminder to take all of your medications at any time given.  It also keeps the medication list handy where you can take it to your doctor's appointment and won't have to memorize any names that are difficult to pronouce.  If you fill that you can benefit from this, look no further, just click on Sign Up and let's get started</p>
-</div>
 
-<div id="signupForm">
-</div>
+<!--profile section that should open and close, similar to hotncold what section"-->
+    <div id="profile">
+        <div class="content">
+          <h3>What is this about?</h3>
+          <div>
+            <p>Let's be honest, there are times when you accidentally forget to take your medication.  I know I have.  This app is designed to make our lives easier by setting a reminder to take all of your medications at any time given.  It also keeps the medication list handy where you can take it to your doctor's appointment and won't have to memorize any names that are difficult to pronouce.  If you fill that you can benefit from this, look no further, just click on Sign Up and let's get started</p>
+            <button class="closeButton">Close</button>
+          </div>
+        </div>
+    </div>
 
-<div id="contactUs">
-  <p>If you have any questions, please contact us at medireminder@example.com</p>
-</div>
+<!--contact us section-->
+    <div id="contactUs">
+      <p>If you have any questions, please contact us at medi_reminder@example.com</p>
+    </div>
 
-
+  </body>
 <script src="js/{{name}}.{{version}}{{#production}}.min{{/production}}.js"></script>
 
