@@ -41,13 +41,16 @@ class Medicine extends React.Component {
 	    this.handlers = createHandlers(this.props.dispatch);
 	}
 	render() {
+		let days = this.props.days.map((day, index) => {
+			return (<button key={index} type="button" disabled>{day}</button>);
+		});
 		return (
-			<li>
-				<span>{this.props.medicine}&nbsp;</span>
-				<span>{this.props.days}&nbsp;</span>
-				<span>{this.props.time}&nbsp;</span>
-				<button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button>
-			</li>
+			 <tr> 
+			    <td>{this.props.medicine}</td> 
+			    <td>{days}</td> 
+			    <td>{this.props.time}</td> 
+			    <td><button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button></td> 
+			</tr> 
 		);
 	}
 }
@@ -62,7 +65,8 @@ class Medicine extends React.Component {
  */
 let mapStateToProps = (state, props) => {
 	return {
-
+		//need to map here so that dispatch() works... 
+		//otherwise, "dispatch() is not a function" occurs
 	};
 };
 

@@ -153,7 +153,6 @@ const gameReducer = (state, action) => {
 			state.satFlag = false;
 		}
 		state.medications = state.medications.concat([[action.medication, days, action.time, dayNum, dayUnix]]);
-		console.log("Date now", Date.now());
 		console.log(state.medications);
 	} else if (action.type === actions.DELETE_BUTTON) {
 		state.medications = state.medications.filter(med => med[0] != action.medication);
