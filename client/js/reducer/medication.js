@@ -8,7 +8,7 @@
 import actions from '../actions/medication';
 
 const initialState = {
-	medications: [["test", "Mon Wed Fri", "8:00 PM"], ["state", "Tue Thurs", "1:00 PM"], ["now", "Sun Sat", "10:00 AM"]],
+	medications: [],
 	loading: false,
 	error: null, 
 	sunFlag: false,
@@ -20,22 +20,47 @@ const initialState = {
 	satFlag: false
 }
 
-const setDay = (date, dayOfWeek) => {
+/** 
+ * getNextDayOfWeek() will get the next day of the week based on the date parameter and
+ * the dayOfWeek parameter. 
+ *
+ * @param {date} date - A date in Date format.
+ * @param {number} dayOfWeek - A number, 0-6, that represents a day of the week.
+ * @return {date} date - A date in Date format.
+ */
+const getNextDayOfWeek = (date, dayOfWeek) => {
 	date = new Date(date.getTime());
 	date.setDate(date.getDate() + (dayOfWeek + 7 - date.getDay()) % 7);
 	return date;
 }
+
+/** 
+ * parseTime() parse the time based on ":". So 10:00:00 will equal ["10", "00", "00"]
+ *
+ * @param {string} time - A time in **:** or **:**:** format.
+ * @return {array} timeArray - An array of strings.
+ */
 const parseTime = (time) => {
 	time = time + ":00";
 	let timeArray = time.split(":");
 	return timeArray;
 }
+
+/** 
+ * newDay() will take a time, in **:** format, and a number and convert the time into
+ * UNIX format.
+ *
+ * @param {string} actionTime - The time that is in our action.
+ * @param {number} dayNum - A number, 0-6, that represents a day of the week.
+ * @return {UNIX time} newDate.getTime() - A date in UNIX format.
+ */
 const newDay = (actionTime, dayNum) => {
-	let date = setDay(new Date() , dayNum);
+	let date = getNextDayOfWeek(new Date() , dayNum);
 	let time = parseTime(actionTime);
 	let newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time[0], time[1], time[2]);
 	return newDate.getTime();
 }
+
 /**
  * gameReducer() handles state changes for all actions that occur.
  * 
