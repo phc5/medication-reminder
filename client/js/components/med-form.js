@@ -27,7 +27,6 @@ let createHandlers = (dispatch, props) => {
 	 */
 	let dayClick = (event) => {
 		event.preventDefault();
-		console.log(typeof event);
 		dispatch(actions.clickDay(event.target.name));
 	}
 	/**
