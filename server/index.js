@@ -5,13 +5,15 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import passport from 'passport';
 import schedule from 'node-schedule';
-import now from 'now';
+import morgan from 'morgan';
+import {BasicStrategy} from 'passport-http';
 
+import {logger} from './utilities/logger';
 import User from '../models/user-model';
 import Medications from '../models/medication-model';
+import {makeEmailAlertMiddleware} from './emailAlert';
 
 const jsonParser = bodyParser.json();
-import {BasicStrategy} from 'passport-http';
 
 const strategy = new BasicStrategy(function(username, password, callback) {
     User.findOne({
@@ -416,7 +418,7 @@ function runServer() {
             const host = HOST || 'localhost';
             console.log(`Listening on ${host}:${PORT}`);
         });
-    });
+    }).catch(err => {console.error(err)});
 }
 
 if (require.main === module) {
