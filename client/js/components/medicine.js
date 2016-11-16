@@ -62,7 +62,8 @@ class Medicine extends React.Component {
  */
 let mapStateToProps = (state, props) => {
 	return {
-
+		//need to map here so that dispatch() works... 
+		//otherwise, "dispatch() is not a function" occurs
 	};
 };
 
