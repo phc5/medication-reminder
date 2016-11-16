@@ -235,26 +235,47 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
     });
 });
 
-let reminders = [];
-// let reminders = Medications.find({}).exec(function(data) {
-//     if(!data) return [];
-//     return data.map(entry => {
-//         let time = new Date(entry.firstReminder).split(":");
-//         time = "".concat(time.getHours(), " ", time.getMinutes(), " ", time.getSeconds());
-//         return schedule.scheduleJob(time.concat(" ","*"," ","*"," ",entry.day[0]), function() {
-//             console.log("running scheduler");
-//             //generate email
-//             Mediations.findOneAndUpdate({_id: entry._id}, {
-//                 $set: {
-//                     nextReminder: new Date((new Date).getTime() + 86400000)
-//                     }
-//                 }, function(err) {
-//                     console.log(err)
-//                 }
-//             );
-//         });
-//     });
-// });
+Medications.find({}, function(data) {
+    console.log("saved medication data: ", data);
+    if(!data) return [];
+    return data.map(entry => {
+        let firstReminder = (new Date(Date.now() + 5000));
+        entry.days.map(day => {
+            if(entry.nextReminder <= Date.now()) {
+                return schedule.scheduleJob(time, function() {
+                    console.log("running scheduler");
+                    //generate email
+                    console.log("entry; ", entry);
+                    if(entry.indexOf(day) == (entry.length - 1)) {
+                        let nextReminderDate = setDay(Date.now(), entry.day[0]);
+                    } else {
+                        let nextReminderDate = setDay(Date.now(), entry.day[(entry.indexOf(day) + 1)]);
+                    }
+                    sendEmail(entry.email, entry.name, function() {
+                        Medications.findOne({_id: entry._id},{
+                            $set: {
+                                nextReminder: nextReminderDate,
+                                lastReminder: Date.now()
+                            }
+                            }, function(err) {
+                                console.log(err);
+                            }
+                        );
+                    });
+                });
+            }
+        });
+    });
+});
+
+// finds the date of the next spedified day of week from the intial date
+// date = initial date
+// dayOfWeek 0-7, corresponding to the day of the week, were Sunday is 0 and 7
+function setDay(date, dayOfWeek) {
+  date = new Date(date.getTime());
+  date.setDate(date.getDate() + (dayOfWeek + 7 - date.getDay()) % 7);
+  return date;
+}
 
 // add medication to a user's medication list
 // request body must include:
@@ -264,17 +285,8 @@ let reminders = [];
 //     "days": days of week for reminder - as array,
 //     "taken", false
 // }
-
-function setDay(date, dayOfWeek) {
-  date = new Date(date.getTime ());
-  date.setDate(date.getDate() + (dayOfWeek + 7 - date.getDay()) % 7);
-  return date;
-}
-
-
 app.post('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
-    console.log("req.user!!!! ", req.user);
      if (!medication.name) {
         return res.status(422).json({message: 'Missing field: name'});
     }
@@ -299,22 +311,26 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
     User.findOne({username: req.user.username}).exec(function(err, entry) {
         if(err) return res.status(500).json({
                         message: 'Internal server error'
-                    });
+        });
+        console.log(medication.days[1]);
+        // use second day of week submitted, if exists, otherwise use first day of week submitted
+        let dayOfWeek = medication.days[1] ? medication.days[1] : medication.days[0];
+        // convert to medication.firstReminder instead of Date.now()
+        let nextReminder = Date.parse(setDay(new Date(Date.now()), dayOfWeek));
         Medications.create({
                 userId: entry._id,
                 name: medication.name, 
                 firstReminder: medication.firstReminder,
                 days: medication.days,
                 taken: medication.taken,
-                nextReminder: 0
+                nextReminder: nextReminder,
+                lastReminder: 0
             }, function(err, med) {
-                console.log("med: ", med);
                 if (err) {
                     return res.status(500).json({
                         message: 'Internal server error happening here'
                     });
                 }
-                console.log("time: ", new Date(med.firstReminder + 5000));
                 // let firstReminder = (new Date(med.firstReminder + 5000));
                 let firstReminder = (new Date(Date.now() + 5000));
                 med.days.map(day => {
@@ -322,11 +338,27 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
                     return schedule.scheduleJob(time, function() {
                         console.log("running scheduler");
                         //generate email
-                            console.log("entry; ", entry);
-                            sendEmail(entry.email, med.name);
+                        console.log("med: ", med);
+                        if(med.days.indexOf(day) == (med.days.length - 1)) {
+                            let nextReminderDate = setDay(new Date(Date.now()), entry.day[0]);
+                        } else {
+                            let nextReminderDate = setDay(new Date(Date.now()), med.days[(med.days.indexOf(day) + 1)]);
+                        }
+                        // sendEmail(entry.email, med.name);
+                        sendEmail(entry.email, med.name, function() {
+                            console.log("updating database call");
+                            Medications.findOne({_id: entry._id},{
+                                $set: {
+                                    nextReminder: nextReminderDate,
+                                    lastReminder: Date.now()
+                                }
+                                }, function(err) {
+                                    console.log(err);
+                                }
+                            );
+                        });
                     });
                 });
-                console.log("reminders updated: ", reminders);
                 return res.status(201).json({med});
             }
         );
