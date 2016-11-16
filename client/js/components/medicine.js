@@ -52,4 +52,19 @@ class Medicine extends React.Component {
 	}
 }
 
-export default Medicine;
+/**
+ * mapStateToProps will map the sunFlag, monFlag, tueFlag, wedFlag, thuFlag, friFlag,
+ * and satFlag from the state to the component's sunFlag, monFlag, tueFlag, wedFlag, thuFlag,
+ * friFlag, satFlag props.
+ * 
+ * @params {object} state - the state of the application taken from the store.
+ * @params {object} props - the props of this component.
+ */
+let mapStateToProps = (state, props) => {
+	return {
+
+	};
+};
+
+let Container = connect(mapStateToProps)(Medicine);
+export default Container;
