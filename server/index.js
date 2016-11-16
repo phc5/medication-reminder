@@ -5,12 +5,15 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import passport from 'passport';
 import schedule from 'node-schedule';
+import morgan from 'morgan';
+import {BasicStrategy} from 'passport-http';
 
+// import {logger} from './utilities/logger';
 import User from '../models/user-model';
 import Medications from '../models/medication-model';
+import {sendEmail} from './emailer';
 
 const jsonParser = bodyParser.json();
-import {BasicStrategy} from 'passport-http';
 
 const strategy = new BasicStrategy(function(username, password, callback) {
     User.findOne({
@@ -20,21 +23,18 @@ const strategy = new BasicStrategy(function(username, password, callback) {
             callback(err);
             return;
         }
-
         if (!user) {
             return callback(null, false, {
-                message: 'Incorrect username.'
+                message: 'Incorrect credentials.'
             });
         }
-
         user.validatePassword(password, function(err, isValid) {
             if (err) {
                 return callback(err);
             }
-
             if (!isValid) {
                 return callback(null, false, {
-                    message: 'Incorrect password.'
+                    message: 'Incorrect credentials.'
                 });
             }
             return callback(null, user);
@@ -78,6 +78,18 @@ app.post('/user', jsonParser, function(req, res) {
             message: 'Incorrect field length: username'
         });
     }
+    let email = req.body.email;
+    if (typeof email !== 'string') {
+        return res.status(422).json({
+            message: 'Incorrect field type: email'
+        });
+    }
+    email = email.trim();
+    if (email === '') {
+        return res.status(422).json({
+            message: 'Incorrect field length: email'
+        });
+    }
     User.findOne({username: username}).then((result) => {
         if(result) {
             console.log(result);
@@ -114,7 +126,8 @@ app.post('/user', jsonParser, function(req, res) {
                 }
                let user = new User({
                     username: username,
-                    password: hash
+                    password: hash,
+                    email: email
                 });
                 user.save(function(err) {
                     if (err) {
@@ -133,7 +146,8 @@ app.post('/user', jsonParser, function(req, res) {
 // requires:
 // {
 //     "username": desired username,
-//     "password": desired password
+//     "password": desired password,
+//     "email": user email
 // }
 app.put('/user', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const user = req.user;
@@ -167,7 +181,8 @@ app.put('/user', jsonParser, passport.authenticate('basic', {session:false}), fu
             }
             User.findOneAndUpdate({username: user.username}, {$set: { 
                         username: updateUser.username,
-                        password: hash
+                        password: hash,
+                        email: updateUser.email
                     }}, 
                     function(err, med) {
                         if (err) {
@@ -249,6 +264,14 @@ let reminders = [];
 //     "days": days of week for reminder - as array,
 //     "taken", false
 // }
+
+function setDay(date, dayOfWeek) {
+  date = new Date(date.getTime ());
+  date.setDate(date.getDate() + (dayOfWeek + 7 - date.getDay()) % 7);
+  return date;
+}
+
+
 app.post('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
     console.log("req.user!!!! ", req.user);
@@ -291,25 +314,19 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
                         message: 'Internal server error happening here'
                     });
                 }
-                console.log("time: ", new Date(med.firstReminder));
-                let time = new Date(med.firstReminder);
-                time = "".concat(time.getHours(), " ", time.getMinutes(), " ", time.getSeconds());
-                console.log("reminders: ", reminders);
-                reminders.push(
-                        schedule.scheduleJob(time.concat(" ","*"," ","*"," ",med.days[0]), function() {
+                console.log("time: ", new Date(med.firstReminder + 5000));
+                // let firstReminder = (new Date(med.firstReminder + 5000));
+                let firstReminder = (new Date(Date.now() + 5000));
+                med.days.map(day => {
+                    let time = setDay(firstReminder, day);
+                    return schedule.scheduleJob(time, function() {
                         console.log("running scheduler");
                         //generate email
-                        Mediations.findOneAndUpdate({_id: med._id}, {
-                            $set: {
-                                nextReminder: new Date((new Date).getTime() + 86400000)
-                                }
-                            }, function(err) {
-                                console.log(err)
-                            }
-                        );
-                    })
-                );
-                console.log("reminders: ", reminders[0]);
+                            console.log("entry; ", entry);
+                            sendEmail(entry.email, med.name);
+                    });
+                });
+                console.log("reminders updated: ", reminders);
                 return res.status(201).json({med});
             }
         );
@@ -403,7 +420,7 @@ function runServer() {
             const host = HOST || 'localhost';
             console.log(`Listening on ${host}:${PORT}`);
         });
-    });
+    }).catch(err => {console.error(err)});
 }
 
 if (require.main === module) {
