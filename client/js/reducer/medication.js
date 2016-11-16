@@ -20,6 +20,22 @@ const initialState = {
 	satFlag: false
 }
 
+const setDay = (date, dayOfWeek) => {
+	date = new Date(date.getTime());
+	date.setDate(date.getDate() + (dayOfWeek + 7 - date.getDay()) % 7);
+	return date;
+}
+const parseTime = (time) => {
+	time = time + ":00";
+	let timeArray = time.split(":");
+	return timeArray;
+}
+const newDay = (actionTime, dayNum) => {
+	let date = setDay(new Date() , dayNum);
+	let time = parseTime(actionTime);
+	let newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time[0], time[1], time[2]);
+	return newDate.getTime();
+}
 /**
  * gameReducer() handles state changes for all actions that occur.
  * 
@@ -66,35 +82,54 @@ const gameReducer = (state, action) => {
 		}
 	} else if (action.type === actions.SUBMIT_FORM) {
 		let days = [];
+		let dayNum = [];
+		let dayUnix = [];
+		let date, newDate, time;
 		if (state.sunFlag) {
 			days.push("Sun");
+			dayNum.push(0);
+			dayUnix.push(newDay(action.time, 0));
 			state.sunFlag = false;
 		}
 		if (state.monFlag) {
 			days.push("Mon");
+			dayNum.push(1);
+			dayUnix.push(newDay(action.time, 1));
 			state.monFlag = false;
 		}
 		if (state.tueFlag) {
 			days.push("Tue");
+			dayNum.push(2);
+			dayUnix.push(newDay(action.time, 2));
 			state.tueFlag = false;
 		}
 		if (state.wedFlag) {
 			days.push("Wed");
+			dayNum.push(3);
+			dayUnix.push(newDay(action.time, 3));
 			state.wedFlag = false;
 		}
 		if (state.thuFlag) {
 			days.push("Thu");
+			dayNum.push(4);
+			dayUnix.push(newDay(action.time, 4));
 			state.thuFlag = false;
 		}
 		if (state.friFlag) {
 			days.push("Fri");
+			dayNum.push(5);
+			dayUnix.push(newDay(action.time, 5));
 			state.friFlag = false;
 		}
 		if (state.satFlag) {
 			days.push("Sat");
+			dayNum.push(6);
+			dayUnix.push(newDay(action.time, 6));
 			state.satFlag = false;
 		}
-		state.medications = state.medications.concat([[action.medication, days, action.time]]);
+		state.medications = state.medications.concat([[action.medication, days, action.time, dayNum, dayUnix]]);
+		console.log("Date now", Date.now());
+		console.log(state.medications);
 	} else if (action.type === actions.DELETE_BUTTON) {
 		state.medications = state.medications.filter(med => med[0] != action.medication);
 	}
