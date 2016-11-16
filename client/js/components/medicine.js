@@ -41,10 +41,13 @@ class Medicine extends React.Component {
 	    this.handlers = createHandlers(this.props.dispatch);
 	}
 	render() {
+		let days = this.props.days.map((day, index) => {
+			return (<button key={index} type="button" disabled>{day}</button>);
+		});
 		return (
 			 <tr> 
 			    <td>{this.props.medicine}</td> 
-			    <td>{this.props.days}</td> 
+			    <td>{days}</td> 
 			    <td>{this.props.time}</td> 
 			    <td><button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button></td> 
 			</tr> 

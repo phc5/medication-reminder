@@ -37,6 +37,7 @@ let createHandlers = (dispatch, props) => {
 	 */
 	let formSubmit = (event) => {
 		event.preventDefault();
+		console.log(event.target.time.value);
 		dispatch(actions.submitForm(event.target.medication.value, event.target.time.value));
 		event.target.reset();
 	}
