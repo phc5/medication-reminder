@@ -20,7 +20,7 @@ const initialState = {
 	satFlag: false
 }
 
-const setDay = (date, dayOfWeek) => {
+const getNextDayOfWeek = (date, dayOfWeek) => {
 	date = new Date(date.getTime());
 	date.setDate(date.getDate() + (dayOfWeek + 7 - date.getDay()) % 7);
 	return date;
@@ -31,7 +31,7 @@ const parseTime = (time) => {
 	return timeArray;
 }
 const newDay = (actionTime, dayNum) => {
-	let date = setDay(new Date() , dayNum);
+	let date = getNextDayOfWeek(new Date() , dayNum);
 	let time = parseTime(actionTime);
 	let newDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time[0], time[1], time[2]);
 	return newDate.getTime();
