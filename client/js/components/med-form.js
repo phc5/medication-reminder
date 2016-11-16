@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
 
@@ -19,7 +19,7 @@ let createHandlers = (dispatch, props) => {
 }
 
 
-class MedForm extends React.Component {
+class MedForm extends Component {
 	constructor(props) {
 	    super(props);
 	    this.handlers = createHandlers(this.props.dispatch, props);
@@ -39,7 +39,7 @@ class MedForm extends React.Component {
 					<span>
 						<button type="button" className={monClass} onClick={this.handlers.dayClick} name="Monday">Mon</button>
 						<button type="button" className={tueClass} onClick={this.handlers.dayClick} name="Tuesday">Tue</button>
-						<button type="button"className={wedClass} onClick={this.handlers.dayClick} name="Wednesday">Wed</button>
+						<button type="button" className={wedClass} onClick={this.handlers.dayClick} name="Wednesday">Wed</button>
 						<button type="button" className={thuClass} onClick={this.handlers.dayClick} name="Thursday">Thu</button>
 						<button type="button" className={friClass} onClick={this.handlers.dayClick} name="Friday">Fri</button>
 						<button type="button" className={satClass} onClick={this.handlers.dayClick} name="Saturday">Sat</button>
