@@ -8,10 +8,10 @@ import schedule from 'node-schedule';
 import morgan from 'morgan';
 import {BasicStrategy} from 'passport-http';
 
-import {logger} from './utilities/logger';
+// import {logger} from './utilities/logger';
 import User from '../models/user-model';
 import Medications from '../models/medication-model';
-import {makeEmailAlertMiddleware} from './emailAlert';
+import {sendEmail} from './emailer';
 
 const jsonParser = bodyParser.json();
 
@@ -25,7 +25,7 @@ const strategy = new BasicStrategy(function(username, password, callback) {
         }
         if (!user) {
             return callback(null, false, {
-                message: 'Incorrect username.'
+                message: 'Incorrect credentials.'
             });
         }
         user.validatePassword(password, function(err, isValid) {
@@ -34,7 +34,7 @@ const strategy = new BasicStrategy(function(username, password, callback) {
             }
             if (!isValid) {
                 return callback(null, false, {
-                    message: 'Incorrect password.'
+                    message: 'Incorrect credentials.'
                 });
             }
             return callback(null, user);
@@ -319,11 +319,13 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
                 let firstReminder = (new Date(Date.now() + 5000));
                 med.days.map(day => {
                     let time = setDay(firstReminder, day);
-                        return schedule.scheduleJob(time, function() {
-                            console.log("running scheduler");
+                    return schedule.scheduleJob(time, function() {
+                        console.log("running scheduler");
                         //generate email
-                        });
+                            console.log("entry; ", entry);
+                            sendEmail(entry.email, med.name);
                     });
+                });
                 console.log("reminders updated: ", reminders);
                 return res.status(201).json({med});
             }
