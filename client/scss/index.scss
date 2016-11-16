@@ -52,7 +52,8 @@ button {
 
 #signupForm {
   margin-top: 100px;
-  display: 400px;
+  width: 400px;
+  display: flex;
   justify-content: center;
 }
 
@@ -76,7 +77,7 @@ button {
   padding: 25px 25px 25px 25px;
 }
 
-@media screen and (max-width: 399px) {
+@media screen and (max-width: 599px) {
   #border-signup{
   width: 100%;
   }
