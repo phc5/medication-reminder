@@ -1,12 +1,41 @@
+/**
+ * @summary med-form.js is a React Component that renders a form. This form allows a user to 
+ * input the name of the medication, the days of the week, and the time that the medication should
+ * be taken. This component uses the state to handle whether or not certain day buttons are 
+ * highlighted or not (based on the flag and click).
+ * 
+ * @require react, react-redux, ../actions/medication
+ */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
 
+/**
+ * createHandlers() will handle all the events that can occur on this component. There are two
+ * events that are handled: dayClick and formSubmit.
+ *
+ * @params {function} dispatch - dispatches a payload to all registered callbacks
+ * @params {object} props - the properties of the component.
+ * @return {object} handlers - the event handlers specified in this function.
+ */
 let createHandlers = (dispatch, props) => {
+	/**
+	 * dayClick() will handle when any of the day buttons are clicked by dispatching the 
+	 * clickDay action and passing in evnet.target.name, which is the name of the button.
+	 * 
+	 * @params {object} event - the event that occurred.
+	 */
 	let dayClick = (event) => {
 		event.preventDefault();
+		console.log(typeof event);
 		dispatch(actions.clickDay(event.target.name));
 	}
+	/**
+	 * formSubmit() will handle the submitting of the form. It will dispatch the submitForm 
+	 * action and pass in the name of the medicine and the time that the user specifies.
+	 * 
+	 * @params {object} event - the event that occurred.
+	 */
 	let formSubmit = (event) => {
 		event.preventDefault();
 		dispatch(actions.submitForm(event.target.medication.value, event.target.time.value));
@@ -18,7 +47,11 @@ let createHandlers = (dispatch, props) => {
 	}
 }
 
-
+/**
+ * MedForm is a React Component that renders a form with two inputs and various buttons for the
+ * days of the week. In render(), button classNames are determined based on the state of the
+ * days' respective flags: 'highlight' if flag is true, else 'base'.
+ */
 class MedForm extends Component {
 	constructor(props) {
 	    super(props);
@@ -52,7 +85,14 @@ class MedForm extends Component {
 	}
 }
 
-
+/**
+ * mapStateToProps will map the sunFlag, monFlag, tueFlag, wedFlag, thuFlag, friFlag,
+ * and satFlag from the state to the component's sunFlag, monFlag, tueFlag, wedFlag, thuFlag,
+ * friFlag, satFlag props.
+ * 
+ * @params {object} state - the state of the application taken from the store.
+ * @params {object} props - the props of this component.
+ */
 let mapStateToProps = (state, props) => {
 	return {
 		sunFlag: state.sunFlag,

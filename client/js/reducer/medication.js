@@ -1,3 +1,10 @@
+/**
+ * @summary medication.js specifies how the application's state will change in response to an 
+ * action. The reducer has to be pure meaning it should calculate the next state and return it. 
+ * It shouldn't mutate the state.
+ * 
+ */
+
 import actions from '../actions/medication';
 
 const initialState = {
@@ -13,6 +20,13 @@ const initialState = {
 	satFlag: false
 }
 
+/**
+ * gameReducer() handles state changes for all actions that occur.
+ * 
+ * @param {object} state - The state of the application.
+ * @param {object} action - An action that occurs.
+ * @return {object} state - The state of the application after an action occurs.
+ */
 const gameReducer = (state, action) => {
 	let copyState = state || initialState;
 	state = Object.assign({}, copyState);
@@ -51,7 +65,6 @@ const gameReducer = (state, action) => {
 				break;
 		}
 	} else if (action.type === actions.SUBMIT_FORM) {
-		console.log("Before push : " + state.medications);
 		let days = [];
 		if (state.sunFlag) {
 			days.push("Sun");
