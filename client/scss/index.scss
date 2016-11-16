@@ -87,3 +87,33 @@ button {
 }
 
 
+table {
+  margin: auto;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 0.25rem;
+  text-align: center !important;
+  border: 1px solid #ccc;
+}
+
+thead {
+  background: blue;
+  color: white;
+}
+
+tbody tr:nth-child(odd) {
+  background: #eee;
+}
+
+tbody tr:nth-child(even) {
+  background: #eee098;
+}
+
+button.delete{
+  width: 100%;
+}
+
+
