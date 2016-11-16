@@ -37,7 +37,7 @@ input {
   margin-top: 15px;
 }
 
-button {
+.closeButton {
   background-color: #6c7b8b;
   border-radius: 8px;
   padding: 10px;
@@ -45,7 +45,7 @@ button {
 }
 
 #loginForm {
-  width: 400px:
+  width: 400px;
   display: flex;
   justify-content: center;
 }
