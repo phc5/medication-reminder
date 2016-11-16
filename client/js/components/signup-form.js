@@ -1,6 +1,5 @@
 /**
- * @summary medicine.js will render a list item with the name of the medicine, the days of 
- * the week needed, the time, and a delete button. 
+ * @summary signup-form.js will render a signup component.
  * 
  * @require react, react-redux, ../actions/medication.
  */
@@ -35,36 +34,28 @@ let createHandlers = (dispatch) => {
  * Medicine is a React Component that renders a list item that contains the name of the medicine,
  * the days of the week, the time that the medicine should be taken, and a delete button.
  */
-class Medicine extends React.Component {
+class SignUp extends React.Component {
 	constructor(props) {
 	    super(props);
 	    this.handlers = createHandlers(this.props.dispatch);
 	}
 	render() {
 		return (
-			<li>
-				<span>{this.props.medicine}&nbsp;</span>
-				<span>{this.props.days}&nbsp;</span>
-				<span>{this.props.time}&nbsp;</span>
-				<button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button>
-			</li>
+			 <form id="signupForm">
+		      <div id="border-signup">
+		      <h1>Sign Up</h1>
+		        <input type="text" name="firstname" value="" className="form-control input-sm" placeholder="First Name"  />
+		        <input type="text" name="lastname" value="" className="form-control input-sm" placeholder="Last Name"  />
+		        <input type="text" name="username" value="" className="form-control input-sm" placeholder="Username"  />
+		        <input type="text" name="email" value="" className="form-control input-sm" placeholder="Email Address"  />
+		        <input type="password" name="password" value="" className="form-control input-sm" placeholder="Password"  />
+		        <input type="password" name="confirm_password" value="" className="form-control input-sm" placeholder="Confirm Password"  />
+		        <label><input type="checkbox" name="terms"/> I agree with the <a href="#">Terms and Conditions</a>.</label>
+		        <input type="submit" value="Sign Up" className="btn btn-info btn-block"/>
+		      </div>
+		    </form>
 		);
 	}
 }
 
-/**
- * mapStateToProps will map the sunFlag, monFlag, tueFlag, wedFlag, thuFlag, friFlag,
- * and satFlag from the state to the component's sunFlag, monFlag, tueFlag, wedFlag, thuFlag,
- * friFlag, satFlag props.
- * 
- * @params {object} state - the state of the application taken from the store.
- * @params {object} props - the props of this component.
- */
-let mapStateToProps = (state, props) => {
-	return {
-
-	};
-};
-
-let Container = connect(mapStateToProps)(Medicine);
-export default Container;
+export default SignUp;

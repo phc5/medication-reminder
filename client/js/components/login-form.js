@@ -1,6 +1,5 @@
 /**
- * @summary medicine.js will render a list item with the name of the medicine, the days of 
- * the week needed, the time, and a delete button. 
+ * @summary login-form.js will render a login component.
  * 
  * @require react, react-redux, ../actions/medication.
  */
@@ -35,36 +34,24 @@ let createHandlers = (dispatch) => {
  * Medicine is a React Component that renders a list item that contains the name of the medicine,
  * the days of the week, the time that the medicine should be taken, and a delete button.
  */
-class Medicine extends React.Component {
+class Login extends React.Component {
 	constructor(props) {
 	    super(props);
 	    this.handlers = createHandlers(this.props.dispatch);
 	}
 	render() {
 		return (
-			<li>
-				<span>{this.props.medicine}&nbsp;</span>
-				<span>{this.props.days}&nbsp;</span>
-				<span>{this.props.time}&nbsp;</span>
-				<button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button>
-			</li>
+			<form id="loginForm">
+			    <div id="border-form" className="form-group">
+			    <h1>LOGIN</h1>
+			        <input type="text" name="username" id="username" className="form-control input-sm" placeholder="Username" />
+			        <input type="password" name="password" value="" className="form-control input-sm" placeholder="Password"  />
+			        <input id="login-remember" type="checkbox" name="remember" value="1"/> Remember me
+			        <input type="submit" value="Login" className="btn btn-info btn-block"/>
+			    </div>
+			 </form>
 		);
 	}
 }
 
-/**
- * mapStateToProps will map the sunFlag, monFlag, tueFlag, wedFlag, thuFlag, friFlag,
- * and satFlag from the state to the component's sunFlag, monFlag, tueFlag, wedFlag, thuFlag,
- * friFlag, satFlag props.
- * 
- * @params {object} state - the state of the application taken from the store.
- * @params {object} props - the props of this component.
- */
-let mapStateToProps = (state, props) => {
-	return {
-
-	};
-};
-
-let Container = connect(mapStateToProps)(Medicine);
-export default Container;
+export default Login;
