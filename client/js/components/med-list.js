@@ -22,7 +22,20 @@ class MedList extends React.Component {
 		let array = this.props.meds.map((med, index) => {
 			return (<Medicine key={index} medicine={med[0]} days={med[1]} time={med[2]} />);
 		});
-		return <div><ul>{array}</ul></div>
+		return <div>
+				 <table>
+				 	<thead>
+				 		<tr>
+				 			<th>Name</th>
+				 			<th>Days</th>
+				 			<th>Time</th>
+				 		</tr>
+				 	</thead>
+				 	<tbody>
+				 		{array}
+				 	</tbody>
+				 </table>
+			   </div>
 	}
 }
 

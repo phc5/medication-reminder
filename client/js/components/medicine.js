@@ -42,12 +42,12 @@ class Medicine extends React.Component {
 	}
 	render() {
 		return (
-			<li>
-				<span>{this.props.medicine}&nbsp;</span>
-				<span>{this.props.days}&nbsp;</span>
-				<span>{this.props.time}&nbsp;</span>
-				<button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button>
-			</li>
+			 <tr> 
+			    <td>{this.props.medicine}</td> 
+			    <td>{this.props.days}</td> 
+			    <td>{this.props.time}</td> 
+			    <td><button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button></td> 
+			</tr> 
 		);
 	}
 }
