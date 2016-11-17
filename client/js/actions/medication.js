@@ -90,6 +90,39 @@ const fetchMedicationError = (error) => {
 	};
 };
 
+const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+const loginSuccess = (username) => {
+	return {
+		type: LOGIN_SUCCESS,
+		username: username
+	};
+};
+
+const LOGIN_ERROR = "LOGIN_ERROR";
+const loginError = (error) => {
+	return {
+		type: LOGIN_ERROR,
+		error: error
+	};
+};
+
+const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
+const signupSuccess = (username) => {
+	return {
+		type: SIGNUP_SUCCESS,
+		username: username
+	};
+};
+
+const SIGNUP_ERROR = "SIGNUP_ERROR";
+const signupError = (error) => {
+	return {
+		type: SIGNUP_ERROR,
+		error: error
+	};
+};
+
+
 /**
  * fetchMedications() fetches the medications of a user.
  * 
@@ -116,6 +149,67 @@ const fetchMedications = () => {
 	}
 };
 
+const login = (username, password) => {
+	return (dispatch) => {
+		const url = '/login';
+		const req = {username, password};
+		console.log(req.username + " " + req.password);
+
+		return fetch(
+			url, 
+			{
+				method: 'post', 
+				body: JSON.stringify(req), 
+				headers: {'content-type': 'application/json', 'Accept':'application/json'} 
+			}
+		)
+		.then((res) => {
+			if (res.status < 200 || res.status >= 300) {
+				const error = new Error(res.statusText);
+				error.res = res;
+				throw error;
+			}
+			return res.json()	
+		})
+		.then((data) => {
+			return dispatch(
+				logInSuccess("Test")
+			)
+		})
+		.catch((error) => {
+			return dispatch(
+				loginError(error) // TODO: SET_NOTIFICATION type, 
+			);
+		});
+	}
+}
+
+const signup = (firstname, lastname, username, email, password) => {
+	return (dispatch) => {
+		const url = '/signup';
+		const req = {firstname, lastname, username, email, password};
+		return fetch(url, {
+			method: 'POST',
+			body: JSON.stringify(req),
+			headers: {'content-type': 'application/json', 'Accept':'application/json'}
+		})
+		.then((res) => {
+			if (res.status < 200 || res.status >= 300) {
+				const error = new Error(res.statusText);
+				error.res = res;
+				throw error;
+			}
+			return res.json();
+		})
+		.then((data) => {
+			return dispatch(signupSuccess());
+		})
+		.catch((error) => {
+			return dispatch(signupError());
+		});
+	}
+}
+
 exports.CLICK_DAY = CLICK_DAY
 exports.clickDay = clickDay
 
@@ -134,4 +228,18 @@ exports.fetchMedicationSuccess = fetchMedicationSuccess
 exports.FETCH_MEDICATION_ERROR = FETCH_MEDICATION_ERROR
 exports.fetchMedicationError = fetchMedicationError
 
-exports.fetchMedications
+exports.LOGIN_SUCCESS = LOGIN_SUCCESS;
+exports.loginSuccess = loginSuccess
+
+exports.LOGIN_ERROR = LOGIN_ERROR;
+exports.loginError = loginError
+
+exports.SIGNUP_SUCCESS = SIGNUP_SUCCESS;
+exports.signupSuccess = signupSuccess
+
+exports.SIGNUP_ERROR = SIGNUP_ERROR;
+exports.signupError = signupError
+
+exports.fetchMedications = fetchMedications
+exports.login = login
+exports.signup = signup

@@ -17,7 +17,8 @@ const initialState = {
 	wedFlag: false,
 	thuFlag: false,
 	friFlag: false,
-	satFlag: false
+	satFlag: false,
+	username: null
 }
 
 /** 
@@ -161,6 +162,8 @@ const gameReducer = (state, action) => {
 		console.log(state.medications);
 	} else if (action.type === actions.DELETE_BUTTON) {
 		state.medications = state.medications.filter(med => med[0] != action.medication);
+	} else if (action.type === actions.LOGIN_SUCCESS) {
+		state.username = state.username.concat(action.username);
 	}
 
 	return state;

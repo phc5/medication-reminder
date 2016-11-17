@@ -41,7 +41,7 @@ class AboutUs extends Component {
   }
   render() {
     return (
-      <div id="profile">
+      <div className="form-group about">
         <div className="content">
           <h3>What is this about?</h3>
           <div>
