@@ -227,13 +227,11 @@ app.delete('/user', passport.authenticate('basic', {session:false}), function(re
 //     "taken", false
 // }
 app.get('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
-    User.find({username: req.user.username}).exec(function(err, user) {
-        Medications.find({userId: user[0]._id}).exec(function(err, meds) {
-            if (err) {
-                return res.status(500).json({message: 'Internal Server Errror'});
-            } 
-            res.json(meds);
-        });
+    Medications.find({userId: req.user._id}).exec(function(err, meds) {
+        if (err) {
+            return res.status(500).json({message: 'Internal Server Errror'});
+        } 
+        res.status(200).json(meds);
     });
 });
 
