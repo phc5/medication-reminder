@@ -17,10 +17,8 @@ if (!(MAILJET_KEY && MAILJET_SECRET && ALERT_FROM_EMAIL && ALERT_FROM_NAME)) {
 
 // send an email using Mailjet.
 // `emailData` is an object
-const sendEmail = (email, medication) => {
-  console.log("med passing into emailer:", medication);
+const sendEmail = (email, medication, callback) => {
   const mailer = mailJet.connect(MAILJET_KEY, MAILJET_SECRET);
-  console.log("key and secret ", MAILJET_KEY, MAILJET_SECRET);
   const emailData = {
       'FromEmail': ALERT_FROM_EMAIL,
       'FromName': ALERT_FROM_NAME,

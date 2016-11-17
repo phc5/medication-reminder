@@ -6,6 +6,7 @@
  */
 
 import fetch from 'isomorphic-fetch';
+import store from '../store';
 
 /**
  * clickDay() handles the user clicks on a day button in med-form.
@@ -58,7 +59,7 @@ const deleteButton = (med) => {
 const FETCH_MEDICATION_REQUEST = "FETCH_MEDICATION_REQUEST";
 const fetchMedicationRequest = () => {
 	return {
-		type: FETCH_MEDIATION_REQUEST
+		type: FETCH_MEDICATION_REQUEST
 	};
 };
 
@@ -90,16 +91,55 @@ const fetchMedicationError = (error) => {
 	};
 };
 
+const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+const loginSuccess = (username, password) => {
+	return {
+		type: LOGIN_SUCCESS,
+		username: username, 
+		password: password
+	};
+};
+
+const LOGIN_ERROR = "LOGIN_ERROR";
+const loginError = (error) => {
+	return {
+		type: LOGIN_ERROR,
+		error: error
+	};
+};
+
+const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
+const signupSuccess = (username) => {
+	return {
+		type: SIGNUP_SUCCESS,
+		username: username
+	};
+};
+
+const SIGNUP_ERROR = "SIGNUP_ERROR";
+const signupError = (error) => {
+	return {
+		type: SIGNUP_ERROR,
+		error: error
+	};
+};
+
+
 /**
  * fetchMedications() fetches the medications of a user.
  * 
  * @return {object} action - The action and its properties.
  */
-const fetchMedications = () => {
+const fetchMedications = (username, password) => {
 	return (dispatch) => {
 		var url = '/medication';
 		dispatch(fetchMedicationRequest());
-		return fetch(url).then((response) => {
+		let enUserPass = btoa(username + ":" + password);
+		return fetch(url, {
+			method: 'GET',
+			headers: {'Accept':'application/json', Authorization: 'Basic ' + enUserPass}
+		})
+		.then((response) => {
 			if (response.status < 200 || response.status >= 300) {
 				let error = new Error(response.statusText);
 				error.response = response;
@@ -108,6 +148,7 @@ const fetchMedications = () => {
 			return response.json();
 		})
 		.then((data) => {
+			console.log(data);
 			return dispatch(fetchMedicationSuccess(data));
 		})
 		.catch((error) => {
@@ -115,6 +156,96 @@ const fetchMedications = () => {
 		});
 	}
 };
+
+const login = (username, password) => {
+	return (dispatch) => {
+		const url = '/medication';
+		let enUserPass = btoa(username + ":" + password);
+		return fetch(url, {
+			method: 'GET',
+			headers: {'Accept':'application/json', Authorization: 'Basic ' + enUserPass} 
+		})
+		.then((res) => {
+			if (res.status < 200 || res.status >= 300) {
+				const error = new Error(res.statusText);
+				error.res = res;
+				throw error;
+			}
+			return res.json();	
+		})
+		.then((data) => {
+			window.location.replace('http://localhost:8080/#/profile');
+			return dispatch(loginSuccess(username, password));
+		})
+		.catch((error) => {
+			console.log(error);
+			return dispatch(loginError(error)); // TODO: SET_NOTIFICATION type, 
+		});
+	}
+}
+
+const signup = (username, email, password) => {
+	return (dispatch) => {
+		const url = '/user';
+		const req = {username, email, password};
+		return fetch(url, {
+			method: 'POST',
+			body: JSON.stringify(req),
+			headers: {'content-type': 'application/json', 'Accept':'application/json'}
+		})
+		.then((res) => {
+			if (res.status < 200 || res.status >= 300) {
+				const error = new Error(res.statusText);
+				error.res = res;
+				throw error;
+			}
+			return res.json();
+		})
+		.then((data) => {
+			wind.location.replace('http://localhost:8080/#/login');
+			return dispatch(signupSuccess(data));
+		})
+		.catch((error) => {
+			return dispatch(signupError());
+		});
+	}
+}
+
+const submitMed = (name, time) => {
+	return (dispatch, getState) => {
+		let medArray = getState().medications;
+		let postArray = medArray[medArray.length -1];
+		console.log(postArray);
+		const url = '/medication';
+		const req = {
+			name: name,
+			days: postArray[3],
+			firstReminder: postArray[4][0],
+			taken: false,
+			username: getState().username
+		};
+		return fetch(url, {
+			method: 'POST',
+			body: JSON.stringify(req),
+			headers: {'content-type': 'application/json', 'Accept':'application/json'}
+		})
+		.then((res) => {
+			if (res.status < 200 || res.status >= 300) {
+				const error = new Error(res.statusText);
+				error.res = res;
+				throw error;
+			}
+			return res.json();
+		})
+		.then((data) => {
+			wind.location.replace('http://localhost:8080/#/login');
+			return dispatch(signupSuccess(data));
+		})
+		.catch((error) => {
+			return dispatch(signupError());
+		});
+	}
+}
 
 exports.CLICK_DAY = CLICK_DAY
 exports.clickDay = clickDay
@@ -134,4 +265,19 @@ exports.fetchMedicationSuccess = fetchMedicationSuccess
 exports.FETCH_MEDICATION_ERROR = FETCH_MEDICATION_ERROR
 exports.fetchMedicationError = fetchMedicationError
 
-exports.fetchMedications
+exports.LOGIN_SUCCESS = LOGIN_SUCCESS;
+exports.loginSuccess = loginSuccess
+
+exports.LOGIN_ERROR = LOGIN_ERROR;
+exports.loginError = loginError
+
+exports.SIGNUP_SUCCESS = SIGNUP_SUCCESS;
+exports.signupSuccess = signupSuccess
+
+exports.SIGNUP_ERROR = SIGNUP_ERROR;
+exports.signupError = signupError
+
+exports.fetchMedications = fetchMedications
+exports.login = login
+exports.signup = signup
+exports.submitMed = submitMed

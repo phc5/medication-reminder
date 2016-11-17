@@ -24,6 +24,10 @@ const MedicationSchema = new mongoose.Schema({
     nextReminder: {
         type: Number,
         required: true
+    },
+    lastReminder: {
+        type: Number,
+        required: true
     }
 });
 

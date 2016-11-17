@@ -38,6 +38,7 @@ let createHandlers = (dispatch, props) => {
 	let formSubmit = (event) => {
 		event.preventDefault();
 		dispatch(actions.submitForm(event.target.medication.value, event.target.time.value));
+		dispatch(actions.submitMed(event.target.medication.value, event.target.time.value));
 		event.target.reset();
 	}
 	return {
@@ -54,7 +55,7 @@ let createHandlers = (dispatch, props) => {
 class MedForm extends Component {
 	constructor(props) {
 	    super(props);
-	    this.handlers = createHandlers(this.props.dispatch, props);
+	    this.handlers = createHandlers(this.props.dispatch, this.props);
 	}
 	render() {
 		let monClass = this.props.monFlag ? 'highlight' : 'base';
@@ -64,7 +65,7 @@ class MedForm extends Component {
 		let friClass = this.props.friFlag ? 'highlight' : 'base';
 		let satClass = this.props.satFlag ? 'highlight' : 'base';
 		let sunClass = this.props.sunFlag ? 'highlight' : 'base';
-		return <form className="medicine" onSubmit={this.handlers.formSubmit} autoComplete="off">
+		return <form className= "form-group medicine" onSubmit={this.handlers.formSubmit} autoComplete="off">
 					<label htmlFor="medication">Name of Medication</label>&nbsp;
 					<input type="text" required="required" name="medication" pattern="[a-zA-Z\s0-9]*"/>&nbsp;
 					<label>Days of the Week</label>&nbsp;
@@ -101,6 +102,7 @@ let mapStateToProps = (state, props) => {
 		thuFlag: state.thuFlag,
 		friFlag: state.friFlag,
 		satFlag: state.satFlag,
+		medication: state.medications
 	};
 };
 

@@ -17,7 +17,10 @@ const initialState = {
 	wedFlag: false,
 	thuFlag: false,
 	friFlag: false,
-	satFlag: false
+	satFlag: false,
+	username: null,
+	password: null,
+	signUpSuccess: false
 }
 
 /** 
@@ -75,9 +78,17 @@ const gameReducer = (state, action) => {
 	if (action.type === actions.FETCH_MEDICATION_REQUEST) {
 		state.loading = true;
 	} else if (action.type === actions.FETCH_MEDICATION_SUCCESS) {
-		state.loading = false;
-		state.error = null;
-		state.medications = action.medications;
+		let name = null;
+		let days = [];
+		let time = "00:00";
+		let meds = [];
+		for (let i = 0; i < action.medications.length; i++) {
+			name = action.medications[i].name;
+			days = action.medications[i].days;
+			meds.push([name, days, time])
+		}
+		state.medications = state.medications.concat(meds);
+		console.log(state.medications);
 	} else if (action.type === actions.FETCH_MEDICATION_ERROR) {
 		state.loading = false;
 		state.error = action.error;
@@ -110,52 +121,61 @@ const gameReducer = (state, action) => {
 		let dayNum = [];
 		let dayUnix = [];
 		let date, newDate, time;
-		if (state.sunFlag) {
-			days.push("Sun");
-			dayNum.push(0);
-			dayUnix.push(newDay(action.time, 0));
-			state.sunFlag = false;
+		
+		if (!state.sunFlag && !state.monFlag && !state.tueFlag && !state.wedFlag && !state.thuFlag && !state.friFlag && !state.satFlag) {
+			alert("Please select at least one day");
+		} else {
+			if (state.sunFlag) {
+				days.push("Sun");
+				dayNum.push(0);
+				dayUnix.push(newDay(action.time, 0));
+				state.sunFlag = false;
+			}
+			if (state.monFlag) {
+				days.push("Mon");
+				dayNum.push(1);
+				dayUnix.push(newDay(action.time, 1));
+				state.monFlag = false;
+			}
+			if (state.tueFlag) {
+				days.push("Tue");
+				dayNum.push(2);
+				dayUnix.push(newDay(action.time, 2));
+				state.tueFlag = false;
+			}
+			if (state.wedFlag) {
+				days.push("Wed");
+				dayNum.push(3);
+				dayUnix.push(newDay(action.time, 3));
+				state.wedFlag = false;
+			}
+			if (state.thuFlag) {
+				days.push("Thu");
+				dayNum.push(4);
+				dayUnix.push(newDay(action.time, 4));
+				state.thuFlag = false;
+			}
+			if (state.friFlag) {
+				days.push("Fri");
+				dayNum.push(5);
+				dayUnix.push(newDay(action.time, 5));
+				state.friFlag = false;
+			}
+			if (state.satFlag) {
+				days.push("Sat");
+				dayNum.push(6);
+				dayUnix.push(newDay(action.time, 6));
+				state.satFlag = false;
+			}
+			state.medications = state.medications.concat([[action.medication, days, action.time, dayNum, dayUnix]]);
 		}
-		if (state.monFlag) {
-			days.push("Mon");
-			dayNum.push(1);
-			dayUnix.push(newDay(action.time, 1));
-			state.monFlag = false;
-		}
-		if (state.tueFlag) {
-			days.push("Tue");
-			dayNum.push(2);
-			dayUnix.push(newDay(action.time, 2));
-			state.tueFlag = false;
-		}
-		if (state.wedFlag) {
-			days.push("Wed");
-			dayNum.push(3);
-			dayUnix.push(newDay(action.time, 3));
-			state.wedFlag = false;
-		}
-		if (state.thuFlag) {
-			days.push("Thu");
-			dayNum.push(4);
-			dayUnix.push(newDay(action.time, 4));
-			state.thuFlag = false;
-		}
-		if (state.friFlag) {
-			days.push("Fri");
-			dayNum.push(5);
-			dayUnix.push(newDay(action.time, 5));
-			state.friFlag = false;
-		}
-		if (state.satFlag) {
-			days.push("Sat");
-			dayNum.push(6);
-			dayUnix.push(newDay(action.time, 6));
-			state.satFlag = false;
-		}
-		state.medications = state.medications.concat([[action.medication, days, action.time, dayNum, dayUnix]]);
-		console.log(state.medications);
 	} else if (action.type === actions.DELETE_BUTTON) {
 		state.medications = state.medications.filter(med => med[0] != action.medication);
+	} else if (action.type === actions.LOGIN_SUCCESS) {
+		state.username = action.username;
+		state.password = action.password;
+	} else if (action.type === actions.SIGNUP_SUCCESS) {
+		state.signUpSuccess = true;
 	}
 
 	return state;

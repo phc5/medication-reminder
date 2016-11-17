@@ -4,7 +4,7 @@
  * 
  * @require react, med-list, med-form
  */
-import React from 'react';
+import React, {Component} from 'react';
 import MedList from './med-list'
 import MedForm from './med-form'
 
@@ -12,7 +12,7 @@ import MedForm from './med-form'
  * MedContainer is a React Component that renders a MedForm Component and MedList
  * Component.
  */
-class Container extends React.Component {
+class Container extends Component {
 	constructor(props) {
 	    super(props);
 	}
