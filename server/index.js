@@ -49,12 +49,17 @@ app.use(passport.initialize());
 
 app.use(express.static(process.env.CLIENT_PATH));
 
-//create new username and password
-// requires
-// {
-//     username: new username,
-//     password: new password
-// }
+
+/**
+* POST to /user creates new username and password
+* Username must not be taken
+* @param {object} user - username and password
+* {
+*   username: new username,
+*   password: new password
+* }
+* @return {string} response - response description
+*/
 app.post('/user', jsonParser, function(req, res) {
     if (!req.body) {
         return res.status(400).json({
@@ -142,13 +147,16 @@ app.post('/user', jsonParser, function(req, res) {
     });
 });
 
-// change username or password
-// requires:
-// {
-//     "username": desired username,
-//     "password": desired password,
-//     "email": user email
-// }
+/**
+* PUT to /user changes username or password
+* @param {object} req.body - user account desired username, password and email
+* {
+*   "username": desired username,
+*   "password": desired password,
+*   "email": user email
+* }
+* @return {string} response - response description
+*/
 app.put('/user', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const user = req.user;
     const updateUser = req.body;
@@ -196,8 +204,12 @@ app.put('/user', jsonParser, passport.authenticate('basic', {session:false}), fu
     });
 });
 
-// delete user account and associated medications
-// requires authentication
+/**
+* DELETE to /user deletes user account
+* deletes medication reminders associated with that user
+* requires authentication
+* @ return {string} response - response description
+*/
 app.delete('/user', passport.authenticate('basic', {session:false}), function(req, res) {
     const user = req.user;
     User.findOne({username: user.username}).exec(function(err, entry) {
@@ -217,15 +229,18 @@ app.delete('/user', passport.authenticate('basic', {session:false}), function(re
 });
 
 
-//get user medication data; requires authentication
-// data will be returned as:
-// {
-//     "userId": User ObjectID,
-//     "name": "medication name",
-//     "date": "Date (day of week)",
-//     "time": "time",
-//     "taken", false
-// }
+/**
+* GET to /medication retrieves medications associated with user
+* requires authentication
+* @return {object} medicationList - array of medication reminder objects
+* {
+*  "userId": User ObjectID,
+*  "name": "medication name",
+*  "date": "Date (day of week)",
+*  "time": "time",
+*  "taken", false
+* }
+*/
 app.get('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
     Medications.find({userId: req.user._id}).exec(function(err, meds) {
         if (err) {
@@ -235,7 +250,9 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
     });
 });
 
-//
+/*
+* Med
+*/
 Medications.find({}, function(data) {
     console.log("saved medication data: ", data);
     if(!data) return [];
@@ -269,15 +286,24 @@ Medications.find({}, function(data) {
     });
 });
 
-// finds the date of the next spedified day of week from the intial date
-// date = initial date
-// dayOfWeek 0-7, corresponding to the day of the week, were Sunday is 0 and 7
+/*
+* setDay() finds the date of a next specified day of the week from the initial date
+* @param {date} date - initial date
+* @param {number} dayOfWeek - 0-7, corresponding to the day of the week, were Sunday is 0 and 7
+* @return {date} date - date of specified day of week
+*/
 function setDay(date, dayOfWeek) {
   date = new Date(date.getTime());
   date.setDate(date.getDate() + (dayOfWeek + 7 - date.getDay()) % 7);
   return date;
 }
 
+/*
+* scheduleReminder() generates an email reminder to take a medication, and updates the medication database nextReminder and lastReminder
+* @param {object} med - medication reminder object in database
+* @param {object} entry - user account object in database
+* @param {number} day - day of week for reminder
+*/
 function scheduleReminder(med, entry, day) {
     console.log("running scheduler");
     //generate email
@@ -308,15 +334,18 @@ function scheduleReminder(med, entry, day) {
     });
 }
 
-// add medication to a user's medication list
-// request body must include:
-// {
-//     "name": "medication name",
-//     "firstReminder": unix time of first reminder,
-//     "days": days of week for reminder - as array,
-//     "taken", false
-// }
-app.post('/medication', jsonParser, function(req, res) {
+/**
+* POST to /medication creates a medication reminder in the database and schedules an email reminder event in express
+* @param {object} req.body - medication reminder information
+* {
+*   "name": "medication name",
+*   "firstReminder": unix time of first reminder,
+*   "days": days of week for reminder - as array,
+*   "taken", false
+* }
+* @return {object} medication reminder object
+*/
+app.post('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
      if (!medication.name) {
         return res.status(422).json({message: 'Missing field: name'});
@@ -382,73 +411,56 @@ app.post('/medication', jsonParser, function(req, res) {
     })
 });
 
-// modify medication attributes
-// must send in full medication object:
-// {
-//     "_id": medication id,
-//     "userId": User ObjectID,
-//     "name": medication name,
-//     "firstReminder": Unix time of first reminder,
-//     "days": days of week for reminder - as array,
-//     "taken": boolean value of whether medication was taken,
-//     "nextReminder": Unix time of next reminder,
-//     "lastReminder": Unix time of last reminder
-// }
+
+/**
+* PUT to /medication updates medication reminder name in database
+* @param {object} req.body - medication reminder id, name, and if taken
+* {
+*   "_id": medication id,
+*   "name": medication name,
+*   "taken": boolean
+*}
+* @return {object} med - updated medication reminder
+*/
 app.put('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
   const medication = req.body;
   console.log(medication);
   let updateObject = Medications.findOne({_id: medication._id}, function() {
-    if (medication.name) {
-        if (typeof(medication.name) !== 'string') {
-            return res.status(422).json({message: 'Incorrect field type: name'});
-        }
-        updateObject.name = medication.name;
-    }
-    if (medication.firstReminder) {
-        if (typeof(medication.name) !== 'string') {
-            return res.status(422).json({message: 'Incorrect field type: name'});
-        }
-        updateObject.name = medication.name;
+    if (!(medication.name)) {
+        return res.status(422).json({message: 'Missing field: name'});
     }
     if (typeof(medication.name) !== 'string') {
         return res.status(422).json({message: 'Incorrect field type: name'});
     }
-    if (!medication.date) {
-        return res.status(422).json({message: 'Missing field: date'});
+    if (!(medication._id)) {
+        return res.status(422).json({message: 'Missing field: _id'});
     }
-    if (typeof(medication.date) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: date'});
-    }
-    if (!medication.time) {
-        return res.status(422).json({message: 'Missing field: time'});
-    }
-    if (typeof(medication.time) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: time'});
-    }
-    Medications.findOneAndUpdate({_id: medication._id, userId: req.user._id}, {$set: { 
-                userId: medication.userId,
-                name: medication.name, 
-                date: medication.date, 
-                time: medication.time,
-                taken: medication.taken
-            }}, 
-            {new: true}, 
-            function(err, med) {
-                if (err) {
-                    return res.status(500).json({message: 'Internal server error'});
-                }
-                if(!med) return res.status(400).json("no entries found")
-                return res.status(201).json({med});
+    Medications.findOneAndUpdate({_id: medication._id}, {$set: { 
+            name: medication.name, 
+            taken: medication.taken
+        }}, 
+        {new: true}, 
+        function(err, med) {
+            if (err) {
+                return res.status(500).json({message: 'Internal server error'});
             }
+            if(!med) return res.status(400).json("no entries found")
+            return res.status(201).json({med});
+        }
     );
   });
 });
 
-// delete medication
-// requires
-// {
-//     _id: medication ObjectID
-// }
+/**
+* DELETE to /medication deletes medication reminder in database (scheduled reminders persist in express)
+* @param {object} req.body - medication reminder objectID
+* @return {string} response - response description, including number of medication events removed
+*/
+delete medication
+requires
+{
+    _id: medication ObjectID
+}
 app.delete('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
     if (!medication._id) {
