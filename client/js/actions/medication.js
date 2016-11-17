@@ -128,7 +128,7 @@ const signupError = (error) => {
  * 
  * @return {object} action - The action and its properties.
  */
-const fetchMedications = () => {
+const fetchMedications = (username) => {
 	return (dispatch) => {
 		var url = '/medication';
 		dispatch(fetchMedicationRequest());
@@ -151,12 +151,11 @@ const fetchMedications = () => {
 
 const login = (username, password) => {
 	return (dispatch) => {
-		const url = '/login';
-		const req = {username, password};
+		const url = '/medication';
+		let enUserPass = btoa(username + ":" + password);
 		return fetch(url, {
-			method: 'POST', 
-			body: JSON.stringify(req), 
-			headers: {'content-type': 'application/json', 'Accept':'application/json'} 
+			method: 'GET',
+			headers: {'Accept':'application/json', Authorization: 'Basic ' + enUserPass} 
 		})
 		.then((res) => {
 			if (res.status < 200 || res.status >= 300) {
@@ -168,9 +167,10 @@ const login = (username, password) => {
 		})
 		.then((data) => {
 			window.location.replace('http://localhost:8080/#/profile');
-			return dispatch(logInSuccess(data));
+			return dispatch(loginSuccess(username));
 		})
 		.catch((error) => {
+			console.log(error);
 			return dispatch(loginError(error)); // TODO: SET_NOTIFICATION type, 
 		});
 	}
@@ -180,6 +180,35 @@ const signup = (username, email, password) => {
 	return (dispatch) => {
 		const url = '/user';
 		const req = {username, email, password};
+		return fetch(url, {
+			method: 'POST',
+			body: JSON.stringify(req),
+			headers: {'content-type': 'application/json', 'Accept':'application/json'}
+		})
+		.then((res) => {
+			if (res.status < 200 || res.status >= 300) {
+				const error = new Error(res.statusText);
+				error.res = res;
+				throw error;
+			}
+			return res.json();
+		})
+		.then((data) => {
+			wind.location.replace('http://localhost:8080/#/login');
+			return dispatch(signupSuccess(data));
+		})
+		.catch((error) => {
+			return dispatch(signupError());
+		});
+	}
+}
+
+const submitMed = (name, time) => {
+	return (dispatch) => {
+		let state = submitForm(name, time);
+		console.log(state);
+		const url = '/medication';
+		const req = {name};
 		return fetch(url, {
 			method: 'POST',
 			body: JSON.stringify(req),
@@ -236,3 +265,4 @@ exports.signupError = signupError
 exports.fetchMedications = fetchMedications
 exports.login = login
 exports.signup = signup
+exports.submitMed = submitMed

@@ -37,7 +37,9 @@ let createHandlers = (dispatch, props) => {
 	 */
 	let formSubmit = (event) => {
 		event.preventDefault();
-		dispatch(actions.submitForm(event.target.medication.value, event.target.time.value));
+		
+		dispatch(actions.submitMed(event.target.medication.value, event.target.time.value));
+		console.log(props.days);
 		event.target.reset();
 	}
 	return {
@@ -54,7 +56,7 @@ let createHandlers = (dispatch, props) => {
 class MedForm extends Component {
 	constructor(props) {
 	    super(props);
-	    this.handlers = createHandlers(this.props.dispatch, props);
+	    this.handlers = createHandlers(this.props.dispatch, this.props);
 	}
 	render() {
 		let monClass = this.props.monFlag ? 'highlight' : 'base';
@@ -100,7 +102,9 @@ let mapStateToProps = (state, props) => {
 		wedFlag: state.wedFlag,
 		thuFlag: state.thuFlag,
 		friFlag: state.friFlag,
-		satFlag: state.satFlag
+		satFlag: state.satFlag,
+		days: state.medications[3],
+		firstReminder: state.medications[5]
 	};
 };
 

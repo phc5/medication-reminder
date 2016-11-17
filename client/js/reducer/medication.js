@@ -160,11 +160,10 @@ const gameReducer = (state, action) => {
 			}
 			state.medications = state.medications.concat([[action.medication, days, action.time, dayNum, dayUnix]]);
 		}
-		console.log(state.medications);
 	} else if (action.type === actions.DELETE_BUTTON) {
 		state.medications = state.medications.filter(med => med[0] != action.medication);
 	} else if (action.type === actions.LOGIN_SUCCESS) {
-		state.username = state.username.concat(action.username);
+		state.username = action.username;
 	} else if (action.type === actions.SIGNUP_SUCCESS) {
 		state.signUpSuccess = true;
 	}

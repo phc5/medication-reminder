@@ -16,7 +16,6 @@ import {sendEmail} from './emailer';
 const jsonParser = bodyParser.json();
 
 const strategy = new BasicStrategy(function(username, password, callback) {
-    console.log(username);
     User.findOne({
         username: username
     }, function (err, user) {
@@ -50,9 +49,6 @@ app.use(passport.initialize());
 
 app.use(express.static(process.env.CLIENT_PATH));
 
-app.post('/login', jsonParser, passport.authenticate('basic', {session: false}), function (req, res) {
-    res.status(200).json({user: req.user});
-});
 //create new username and password
 // requires
 // {
@@ -231,6 +227,7 @@ app.delete('/user', passport.authenticate('basic', {session:false}), function(re
 //     "taken", false
 // }
 app.get('/medication', passport.authenticate('basic', {session:false}), function(req, res) {
+    console.log(req.user);
     Medications.find({userId: req.user._id}).exec(function(err, meds) {
         if (err) {
             return res.status(500).json({message: 'Internal Server Errror'});
