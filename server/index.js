@@ -16,6 +16,7 @@ import {sendEmail} from './emailer';
 const jsonParser = bodyParser.json();
 
 const strategy = new BasicStrategy(function(username, password, callback) {
+    console.log(username);
     User.findOne({
         username: username
     }, function (err, user) {
@@ -49,6 +50,9 @@ app.use(passport.initialize());
 
 app.use(express.static(process.env.CLIENT_PATH));
 
+app.post('/login', jsonParser, passport.authenticate('basic', {session: false}), function (req, res) {
+    res.status(200).json({user: req.user});
+});
 //create new username and password
 // requires
 // {

@@ -4,6 +4,7 @@
  * @require react, react-redux, ../actions/medication.
  */
 import React, {Component} from 'react';
+import {Router} from 'react-router';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
 
