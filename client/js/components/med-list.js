@@ -38,19 +38,19 @@ class MedList extends Component {
 			return (<Medicine key={index} medicine={med[0]} days={med[1]} time={time} />);
 		});
 		return <div>
-				 <table>
-				 	<thead>
-				 		<tr>
-				 			<th>Name</th>
-				 			<th>Days</th>
-				 			<th>Time</th>
-				 		</tr>
-				 	</thead>
-				 	<tbody>
-				 		{array}
-				 	</tbody>
-				 </table>
-			   </div>
+			 <table>
+			 	<thead>
+			 		<tr>
+			 			<th>Name</th>
+			 			<th>Days</th>
+			 			<th>Time</th>
+			 		</tr>
+			 	</thead>
+			 	<tbody>
+			 		{array}
+			 	</tbody>
+			 </table>
+		   </div>	
 	}
 }
 
@@ -62,7 +62,14 @@ class MedList extends Component {
  */
 let mapStateToProps = (state, props) => {
 	return {
-		meds: state.medications
+		meds: state.medications,
+		sunFlag: state.sunFlag,
+		monFlag: state.monFlag,
+		tueFlag: state.tueFlag,
+		wedFlag: state.wedFlag,
+		thuFlag: state.thuFlag,
+		friFlag: state.friFlag,
+		satFlag: state.satFlag
 	};
 };
 

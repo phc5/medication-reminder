@@ -100,7 +100,7 @@ let mapStateToProps = (state, props) => {
 		wedFlag: state.wedFlag,
 		thuFlag: state.thuFlag,
 		friFlag: state.friFlag,
-		satFlag: state.satFlag,
+		satFlag: state.satFlag
 	};
 };
 
