@@ -6,6 +6,7 @@
  */
 
 import fetch from 'isomorphic-fetch';
+import store from '../store';
 
 /**
  * clickDay() handles the user clicks on a day button in med-form.
@@ -204,11 +205,18 @@ const signup = (username, email, password) => {
 }
 
 const submitMed = (name, time) => {
-	return (dispatch) => {
-		let state = submitForm(name, time);
-		console.log(state);
+	return (dispatch, getState) => {
+		let medArray = getState().medications;
+		let postArray = medArray[medArray.length -1];
+		console.log(postArray);
 		const url = '/medication';
-		const req = {name};
+		const req = {
+			name: name,
+			days: postArray[3],
+			firstReminder: postArray[4][0],
+			taken: false,
+			username: getState().username
+		};
 		return fetch(url, {
 			method: 'POST',
 			body: JSON.stringify(req),

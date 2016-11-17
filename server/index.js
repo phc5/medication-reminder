@@ -317,7 +317,7 @@ function scheduleReminder(med, entry, day) {
 //     "days": days of week for reminder - as array,
 //     "taken", false
 // }
-app.post('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
+app.post('/medication', jsonParser, function(req, res) {
     const medication = req.body;
      if (!medication.name) {
         return res.status(422).json({message: 'Missing field: name'});
@@ -341,7 +341,7 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
         return res.status(422).json({message: 'Incorrect field type: taken'});
     }
     // Look up user to retrieve email
-    User.findOne({username: req.user.username}).exec(function(err, entry) {
+    User.findOne({username: req.body.username}).exec(function(err, entry) {
         if(err) return res.status(500).json({
                         message: 'Internal server error'
         });

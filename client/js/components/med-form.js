@@ -37,9 +37,8 @@ let createHandlers = (dispatch, props) => {
 	 */
 	let formSubmit = (event) => {
 		event.preventDefault();
-		
+		dispatch(actions.submitForm(event.target.medication.value, event.target.time.value));
 		dispatch(actions.submitMed(event.target.medication.value, event.target.time.value));
-		console.log(props.days);
 		event.target.reset();
 	}
 	return {
@@ -103,8 +102,7 @@ let mapStateToProps = (state, props) => {
 		thuFlag: state.thuFlag,
 		friFlag: state.friFlag,
 		satFlag: state.satFlag,
-		days: state.medications[3],
-		firstReminder: state.medications[5]
+		medication: state.medications
 	};
 };
 
