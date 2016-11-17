@@ -97,6 +97,7 @@
     "node-mailjet": "^3.0.6",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
+    "path": "^0.12.7",
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-redux": "^4.4.5",

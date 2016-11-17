@@ -5,7 +5,7 @@
  * 
  * @require react, react-redux, ./medicine.
  */
-import React from 'react';
+import React, {Component}from 'react';
 import {connect} from 'react-redux';
 import Medicine from './medicine';
 // import actions from '../actions/medication';
@@ -28,7 +28,7 @@ const changeToAMPM = (time) => {
  * MedList is a React Component that renders an unordered list of Medicine components based on
  * the number of medicines in this.props.med (which is mapped from state.medications).
  */
-class MedList extends React.Component {
+class MedList extends Component {
 	constructor(props) {
 	    super(props);
 	}

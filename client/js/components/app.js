@@ -12,17 +12,16 @@ import MedForm from './med-form'
  * MedContainer is a React Component that renders a MedForm Component and MedList
  * Component.
  */
-class Container extends Component {
+class App extends Component {
 	constructor(props) {
 	    super(props);
 	}
 	render() {
 		return (<div>
-					<MedForm />
-					<MedList />
+					{this.props.children}
 				</div>
 		)
 	}
 }
 
-export default Container;
+export default App;
