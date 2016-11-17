@@ -235,6 +235,7 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
     });
 });
 
+//
 Medications.find({}, function(data) {
     console.log("saved medication data: ", data);
     if(!data) return [];
@@ -277,6 +278,36 @@ function setDay(date, dayOfWeek) {
   return date;
 }
 
+function scheduleReminder(med, entry, day) {
+    console.log("running scheduler");
+    //generate email
+    let nextReminderDate;
+    if(med.days.indexOf(day) == (med.days.length - 1)) {
+        nextReminderDate = Date.now(setDay(new Date(Date.now()), med.days[0]));
+    } else {
+        nextReminderDate = Date.now(setDay(new Date(Date.now()), med.days[(med.days.indexOf(day) + 1)]));
+    }
+    let emailPromise = new Promise((resolve) => {
+        sendEmail(entry.email, med.name);
+        console.log("running sendEmail");
+        resolve("Success!");
+    })
+    .then(function() {
+        let lastReminderDate = Date.now();
+        Medications.update({_id: med._id},{
+                $set: {
+                    nextReminder: nextReminderDate,
+                    lastReminder: lastReminderDate
+                }
+            }
+        );
+        return
+    })
+    .catch(err => {
+        console.log(err);
+    });
+}
+
 // add medication to a user's medication list
 // request body must include:
 // {
@@ -308,11 +339,11 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
     if (typeof(medication.taken) !== 'boolean') {
         return res.status(422).json({message: 'Incorrect field type: taken'});
     }
+    // Look up user to retrieve email
     User.findOne({username: req.user.username}).exec(function(err, entry) {
         if(err) return res.status(500).json({
                         message: 'Internal server error'
         });
-        console.log(medication.days[1]);
         // use second day of week submitted, if exists, otherwise use first day of week submitted
         let dayOfWeek = medication.days[1] ? medication.days[1] : medication.days[0];
         // convert to medication.firstReminder instead of Date.now()
@@ -331,33 +362,19 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
                         message: 'Internal server error happening here'
                     });
                 }
-                // let firstReminder = (new Date(med.firstReminder + 5000));
-                let firstReminder = (new Date(Date.now() + 5000));
+                // let firstReminder = (new Date(Date.now() + 5000));
+                let firstReminder = new Date(med.firstReminder);
                 med.days.map(day => {
-                    let time = setDay(firstReminder, day);
-                    return schedule.scheduleJob(time, function() {
-                        console.log("running scheduler");
-                        //generate email
-                        console.log("med: ", med);
-                        if(med.days.indexOf(day) == (med.days.length - 1)) {
-                            let nextReminderDate = setDay(new Date(Date.now()), entry.day[0]);
-                        } else {
-                            let nextReminderDate = setDay(new Date(Date.now()), med.days[(med.days.indexOf(day) + 1)]);
-                        }
-                        // sendEmail(entry.email, med.name);
-                        sendEmail(entry.email, med.name, function() {
-                            console.log("updating database call");
-                            Medications.findOne({_id: entry._id},{
-                                $set: {
-                                    nextReminder: nextReminderDate,
-                                    lastReminder: Date.now()
-                                }
-                                }, function(err) {
-                                    console.log(err);
-                                }
-                            );
+                    if(med.days.indexOf(day) == 0) {
+                        schedule.scheduleJob(firstReminder, function() {
+                            scheduleReminder(med, entry, day)
                         });
-                    });
+                    } else {
+                        let time = setDay(firstReminder, day);
+                        return schedule.scheduleJob(time, function(){
+                            scheduleReminder(med, entry, day)
+                        });
+                    }
                 });
                 return res.status(201).json({med});
             }
@@ -368,17 +385,30 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
 // modify medication attributes
 // must send in full medication object:
 // {
+//     "_id": medication id,
 //     "userId": User ObjectID,
-//     "name": "medication name",
-//     "date": "Date (day of week)",
-//     "time": "time",
-//     "taken", false
+//     "name": medication name,
+//     "firstReminder": Unix time of first reminder,
+//     "days": days of week for reminder - as array,
+//     "taken": boolean value of whether medication was taken,
+//     "nextReminder": Unix time of next reminder,
+//     "lastReminder": Unix time of last reminder
 // }
 app.put('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
   const medication = req.body;
   console.log(medication);
-    if (!medication.name) {
-        return res.status(422).json({message: 'Missing field: name'});
+  let updateObject = Medications.findOne({_id: medication._id}, function() {
+    if (medication.name) {
+        if (typeof(medication.name) !== 'string') {
+            return res.status(422).json({message: 'Incorrect field type: name'});
+        }
+        updateObject.name = medication.name;
+    }
+    if (medication.firstReminder) {
+        if (typeof(medication.name) !== 'string') {
+            return res.status(422).json({message: 'Incorrect field type: name'});
+        }
+        updateObject.name = medication.name;
     }
     if (typeof(medication.name) !== 'string') {
         return res.status(422).json({message: 'Incorrect field type: name'});
@@ -411,6 +441,7 @@ app.put('/medication', jsonParser, passport.authenticate('basic', {session:false
                 return res.status(201).json({med});
             }
     );
+  });
 });
 
 // delete medication
@@ -452,7 +483,7 @@ function runServer() {
             const host = HOST || 'localhost';
             console.log(`Listening on ${host}:${PORT}`);
         });
-    }).catch(err => {console.error(err)});
+    }).catch(err => {console.error("err: ",err)});
 }
 
 if (require.main === module) {
