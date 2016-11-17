@@ -5,7 +5,7 @@
  * 
  * @require react, react-redux, ./medicine.
  */
-import React from 'react';
+import React, {Component}from 'react';
 import {connect} from 'react-redux';
 import Medicine from './medicine';
 // import actions from '../actions/medication';
@@ -28,7 +28,7 @@ const changeToAMPM = (time) => {
  * MedList is a React Component that renders an unordered list of Medicine components based on
  * the number of medicines in this.props.med (which is mapped from state.medications).
  */
-class MedList extends React.Component {
+class MedList extends Component {
 	constructor(props) {
 	    super(props);
 	}
@@ -38,19 +38,19 @@ class MedList extends React.Component {
 			return (<Medicine key={index} medicine={med[0]} days={med[1]} time={time} />);
 		});
 		return <div>
-				 <table>
-				 	<thead>
-				 		<tr>
-				 			<th>Name</th>
-				 			<th>Days</th>
-				 			<th>Time</th>
-				 		</tr>
-				 	</thead>
-				 	<tbody>
-				 		{array}
-				 	</tbody>
-				 </table>
-			   </div>
+			 <table>
+			 	<thead>
+			 		<tr>
+			 			<th>Name</th>
+			 			<th>Days</th>
+			 			<th>Time</th>
+			 		</tr>
+			 	</thead>
+			 	<tbody>
+			 		{array}
+			 	</tbody>
+			 </table>
+		   </div>	
 	}
 }
 
@@ -62,7 +62,14 @@ class MedList extends React.Component {
  */
 let mapStateToProps = (state, props) => {
 	return {
-		meds: state.medications
+		meds: state.medications,
+		sunFlag: state.sunFlag,
+		monFlag: state.monFlag,
+		tueFlag: state.tueFlag,
+		wedFlag: state.wedFlag,
+		thuFlag: state.thuFlag,
+		friFlag: state.friFlag,
+		satFlag: state.satFlag
 	};
 };
 

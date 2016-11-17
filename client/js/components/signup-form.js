@@ -3,7 +3,7 @@
  * 
  * @require react, react-redux, ../actions/medication.
  */
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
 
@@ -34,7 +34,7 @@ let createHandlers = (dispatch) => {
  * Medicine is a React Component that renders a list item that contains the name of the medicine,
  * the days of the week, the time that the medicine should be taken, and a delete button.
  */
-class SignUp extends React.Component {
+class SignUp extends Component {
 	constructor(props) {
 	    super(props);
 	    this.handlers = createHandlers(this.props.dispatch);
