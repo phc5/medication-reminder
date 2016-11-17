@@ -27,8 +27,8 @@ let createHandlers = (dispatch) => {
 	}
 	let signupSubmit = (event) => {
 		event.preventDefault();
-		dispatch(actions.signup(event.target.firstname.value, event.target.lastname.value, 
-			event.target.username.value, event.target.email.value, event.target.password.value));
+		dispatch(actions.signup(event.target.username.value, event.target.email.value, event.target.password.value));
+		event.target.reset();
 	}
 	return {
 		delClick,
@@ -47,11 +47,9 @@ class SignUp extends Component {
 	}
 	render() {
 		return (
-			 <form id="signupForm" onSubmit={this.handlers.signupSubmit}>
+		 	<form id="signupForm" onSubmit={this.handlers.signupSubmit}>
 		      <div id="border-signup">
 		      <h1>Sign Up</h1>
-		        <input type="text" name="firstname" className="form-control input-sm" placeholder="First Name" autoComplete="off" required/>
-		        <input type="text" name="lastname" className="form-control input-sm" placeholder="Last Name" autoComplete="off" required/>
 		        <input type="text" name="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
 		        <input type="text" name="email" className="form-control input-sm" placeholder="Email Address" autoComplete="off" required/>
 		        <input type="password" name="password" className="form-control input-sm" placeholder="Password" autoComplete="off" required/>
@@ -65,7 +63,7 @@ class SignUp extends Component {
 
 let mapStateToProps = (state, props) => {
 	return {
-
+		signUpSuccess: state.signUpSuccess
 	};
 };
 

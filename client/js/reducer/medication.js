@@ -18,7 +18,8 @@ const initialState = {
 	thuFlag: false,
 	friFlag: false,
 	satFlag: false,
-	username: null
+	username: null,
+	signUpSuccess: false
 }
 
 /** 
@@ -164,6 +165,8 @@ const gameReducer = (state, action) => {
 		state.medications = state.medications.filter(med => med[0] != action.medication);
 	} else if (action.type === actions.LOGIN_SUCCESS) {
 		state.username = state.username.concat(action.username);
+	} else if (action.type === actions.SIGNUP_SUCCESS) {
+		state.signUpSuccess = true;
 	}
 
 	return state;

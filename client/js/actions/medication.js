@@ -153,41 +153,33 @@ const login = (username, password) => {
 	return (dispatch) => {
 		const url = '/login';
 		const req = {username, password};
-		console.log(req.username + " " + req.password);
-
-		return fetch(
-			url, 
-			{
-				method: 'post', 
-				body: JSON.stringify(req), 
-				headers: {'content-type': 'application/json', 'Accept':'application/json'} 
-			}
-		)
+		return fetch(url, {
+			method: 'POST', 
+			body: JSON.stringify(req), 
+			headers: {'content-type': 'application/json', 'Accept':'application/json'} 
+		})
 		.then((res) => {
 			if (res.status < 200 || res.status >= 300) {
 				const error = new Error(res.statusText);
 				error.res = res;
 				throw error;
 			}
-			return res.json()	
+			return res.json();	
 		})
 		.then((data) => {
-			return dispatch(
-				logInSuccess("Test")
-			)
+			window.location.replace('http://localhost:8080/#/profile');
+			return dispatch(logInSuccess(data));
 		})
 		.catch((error) => {
-			return dispatch(
-				loginError(error) // TODO: SET_NOTIFICATION type, 
-			);
+			return dispatch(loginError(error)); // TODO: SET_NOTIFICATION type, 
 		});
 	}
 }
 
-const signup = (firstname, lastname, username, email, password) => {
+const signup = (username, email, password) => {
 	return (dispatch) => {
-		const url = '/signup';
-		const req = {firstname, lastname, username, email, password};
+		const url = '/user';
+		const req = {username, email, password};
 		return fetch(url, {
 			method: 'POST',
 			body: JSON.stringify(req),
@@ -202,7 +194,8 @@ const signup = (firstname, lastname, username, email, password) => {
 			return res.json();
 		})
 		.then((data) => {
-			return dispatch(signupSuccess());
+			wind.location.replace('http://localhost:8080/#/login');
+			return dispatch(signupSuccess(data));
 		})
 		.catch((error) => {
 			return dispatch(signupError());
