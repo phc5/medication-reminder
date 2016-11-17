@@ -16,6 +16,7 @@ import {sendEmail} from './emailer';
 const jsonParser = bodyParser.json();
 
 const strategy = new BasicStrategy(function(username, password, callback) {
+    console.log(username);
     User.findOne({
         username: username
     }, function (err, user) {
@@ -48,7 +49,6 @@ const app = express();
 app.use(passport.initialize());
 
 app.use(express.static(process.env.CLIENT_PATH));
-
 
 /**
 * POST to /user creates new username and password
