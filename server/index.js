@@ -251,36 +251,17 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
 });
 
 /*
-* Med
+* populateScheduler() populates express with scheduled events corresponding to medication reminders. This runs upon server startup to update the server with reminders from the database.
 */
 function populateScheduler() {
     Medications.find({}, function(err, data) {
-        console.log("saved medication data: ", data);
         if(!data) return [];
         return data.map(entry => {
             let firstReminder = (new Date(Date.now() + 5000));
             entry.days.map(day => {
                 if(entry.nextReminder <= Date.now()) {
-                    return schedule.scheduleJob(time, function() {
-                        console.log("running scheduler");
-                        //generate email
-                        console.log("entry; ", entry);
-                        if(entry.indexOf(day) == (entry.length - 1)) {
-                            let nextReminderDate = setDay(Date.now(), entry.day[0]);
-                        } else {
-                            let nextReminderDate = setDay(Date.now(), entry.day[(entry.indexOf(day) + 1)]);
-                        }
-                        sendEmail(entry.email, entry.name, function() {
-                            Medications.findOne({_id: entry._id},{
-                                $set: {
-                                    nextReminder: nextReminderDate,
-                                    lastReminder: Date.now()
-                                }
-                                }, function(err) {
-                                    console.log(err);
-                                }
-                            );
-                        });
+                    return schedule.scheduleJob(firstReminder, function() {
+                            scheduleReminder(med, entry, day)
                     });
                 }
             });
