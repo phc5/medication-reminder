@@ -253,38 +253,40 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
 /*
 * Med
 */
-Medications.find({}, function(data) {
-    console.log("saved medication data: ", data);
-    if(!data) return [];
-    return data.map(entry => {
-        let firstReminder = (new Date(Date.now() + 5000));
-        entry.days.map(day => {
-            if(entry.nextReminder <= Date.now()) {
-                return schedule.scheduleJob(time, function() {
-                    console.log("running scheduler");
-                    //generate email
-                    console.log("entry; ", entry);
-                    if(entry.indexOf(day) == (entry.length - 1)) {
-                        let nextReminderDate = setDay(Date.now(), entry.day[0]);
-                    } else {
-                        let nextReminderDate = setDay(Date.now(), entry.day[(entry.indexOf(day) + 1)]);
-                    }
-                    sendEmail(entry.email, entry.name, function() {
-                        Medications.findOne({_id: entry._id},{
-                            $set: {
-                                nextReminder: nextReminderDate,
-                                lastReminder: Date.now()
-                            }
-                            }, function(err) {
-                                console.log(err);
-                            }
-                        );
+function populateScheduler() {
+    Medications.find({}, function(err, data) {
+        console.log("saved medication data: ", data);
+        if(!data) return [];
+        return data.map(entry => {
+            let firstReminder = (new Date(Date.now() + 5000));
+            entry.days.map(day => {
+                if(entry.nextReminder <= Date.now()) {
+                    return schedule.scheduleJob(time, function() {
+                        console.log("running scheduler");
+                        //generate email
+                        console.log("entry; ", entry);
+                        if(entry.indexOf(day) == (entry.length - 1)) {
+                            let nextReminderDate = setDay(Date.now(), entry.day[0]);
+                        } else {
+                            let nextReminderDate = setDay(Date.now(), entry.day[(entry.indexOf(day) + 1)]);
+                        }
+                        sendEmail(entry.email, entry.name, function() {
+                            Medications.findOne({_id: entry._id},{
+                                $set: {
+                                    nextReminder: nextReminderDate,
+                                    lastReminder: Date.now()
+                                }
+                                }, function(err) {
+                                    console.log(err);
+                                }
+                            );
+                        });
                     });
-                });
-            }
+                }
+            });
         });
     });
-});
+}
 
 /*
 * setDay() finds the date of a next specified day of the week from the initial date
@@ -456,11 +458,6 @@ app.put('/medication', jsonParser, passport.authenticate('basic', {session:false
 * @param {object} req.body - medication reminder objectID
 * @return {string} response - response description, including number of medication events removed
 */
-delete medication
-requires
-{
-    _id: medication ObjectID
-}
 app.delete('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
     if (!medication._id) {
@@ -494,6 +491,7 @@ function runServer() {
             }
             const host = HOST || 'localhost';
             console.log(`Listening on ${host}:${PORT}`);
+            setTimeout(populateScheduler, 1000);
         });
     }).catch(err => {console.error("err: ",err)});
 }
