@@ -4,7 +4,7 @@
  * 
  * @require react, react-redux, ../actions/medication.
  */
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
 
@@ -35,19 +35,22 @@ let createHandlers = (dispatch) => {
  * Medicine is a React Component that renders a list item that contains the name of the medicine,
  * the days of the week, the time that the medicine should be taken, and a delete button.
  */
-class Medicine extends React.Component {
+class Medicine extends Component {
 	constructor(props) {
 	    super(props);
 	    this.handlers = createHandlers(this.props.dispatch);
 	}
 	render() {
+		let days = this.props.days.map((day, index) => {
+			return (<button key={index} type="button" disabled>{day}</button>);
+		});
 		return (
-			<li>
-				<span>{this.props.medicine}&nbsp;</span>
-				<span>{this.props.days}&nbsp;</span>
-				<span>{this.props.time}&nbsp;</span>
-				<button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button>
-			</li>
+			 <tr> 
+			    <td>{this.props.medicine}</td> 
+			    <td>{days}</td> 
+			    <td>{this.props.time}</td> 
+			    <td><button name={this.props.medicine} className="delete" onClick={this.handlers.delClick}>Delete</button></td> 
+			</tr> 
 		);
 	}
 }
@@ -62,7 +65,8 @@ class Medicine extends React.Component {
  */
 let mapStateToProps = (state, props) => {
 	return {
-
+		//need to map here so that dispatch() works... 
+		//otherwise, "dispatch() is not a function" occurs
 	};
 };
 

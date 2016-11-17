@@ -64,7 +64,7 @@ class MedForm extends Component {
 		let friClass = this.props.friFlag ? 'highlight' : 'base';
 		let satClass = this.props.satFlag ? 'highlight' : 'base';
 		let sunClass = this.props.sunFlag ? 'highlight' : 'base';
-		return <form className="medicine" onSubmit={this.handlers.formSubmit} autoComplete="off">
+		return <form className= "form-group medicine" onSubmit={this.handlers.formSubmit} autoComplete="off">
 					<label htmlFor="medication">Name of Medication</label>&nbsp;
 					<input type="text" required="required" name="medication" pattern="[a-zA-Z\s0-9]*"/>&nbsp;
 					<label>Days of the Week</label>&nbsp;
@@ -100,7 +100,7 @@ let mapStateToProps = (state, props) => {
 		wedFlag: state.wedFlag,
 		thuFlag: state.thuFlag,
 		friFlag: state.friFlag,
-		satFlag: state.satFlag,
+		satFlag: state.satFlag
 	};
 };
 

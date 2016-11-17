@@ -3,7 +3,7 @@
  * 
  * @require react, react-redux, ../actions/medication.
  */
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
 
@@ -25,8 +25,13 @@ let createHandlers = (dispatch) => {
 		event.preventDefault();
 		dispatch(actions.deleteButton(event.target.name));
 	}
-	return {
-		delClick
+	let logInSubmit = (event) => {
+		event.preventDefault();
+		dispatch(actions.login(event.target.username.value, event.target.password.value));
+	}
+		return {
+		delClick,
+		logInSubmit
 	}
 }
 
@@ -34,24 +39,31 @@ let createHandlers = (dispatch) => {
  * Medicine is a React Component that renders a list item that contains the name of the medicine,
  * the days of the week, the time that the medicine should be taken, and a delete button.
  */
-class Login extends React.Component {
+class Login extends Component {
 	constructor(props) {
 	    super(props);
 	    this.handlers = createHandlers(this.props.dispatch);
 	}
 	render() {
 		return (
-			<form id="loginForm">
+			<form id="loginForm" onSubmit={this.handlers.logInSubmit}>
 			    <div id="border-form" className="form-group">
 			    <h1>LOGIN</h1>
-			        <input type="text" name="username" id="username" className="form-control input-sm" placeholder="Username" />
-			        <input type="password" name="password" value="" className="form-control input-sm" placeholder="Password"  />
-			        <input id="login-remember" type="checkbox" name="remember" value="1"/> Remember me
+			        <input type="text" name="username" id="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
+			        <input type="password" name="password" className="form-control input-sm" placeholder="Password" required/>
 			        <input type="submit" value="Login" className="btn btn-info btn-block"/>
+			        <p>Don't have an account? Click <a href="#/signup">here</a> to register!</p>
 			    </div>
 			 </form>
 		);
 	}
 }
 
-export default Login;
+let mapStateToProps = (state, props) => {
+	return {
+
+	};
+};
+
+let Container = connect(mapStateToProps)(Login);
+export default Container;

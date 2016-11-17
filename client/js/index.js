@@ -12,6 +12,8 @@ import Container from './components/container';
 import Home from './components/home';
 import SignUp from './components/signup-form';
 import ContactUs from './components/contact-us';
+import LogIn from './components/login-form';
+import AboutUs from './components/about-us';
 
 console.log(`Client running in ${process.env.NODE_ENV} mode`);
 
@@ -20,7 +22,9 @@ const routes = (
 		<Router history={hashHistory}>
 			<Route path="/" component={Home}/>
 			<Route path="/profile" component={Container} />
-			<Route path="/signupForm" component={SignUp} />
+			<Route path="/login" component={LogIn} />
+			<Route path="/signup" component={SignUp} />
+			<Route path="/aboutUs" component={AboutUs} />
 			<Route path="/contactUs" component={ContactUs} />
 		</Router>
 	</Provider>

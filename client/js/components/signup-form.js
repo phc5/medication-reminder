@@ -3,7 +3,7 @@
  * 
  * @require react, react-redux, ../actions/medication.
  */
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
 
@@ -25,8 +25,14 @@ let createHandlers = (dispatch) => {
 		event.preventDefault();
 		dispatch(actions.deleteButton(event.target.name));
 	}
+	let signupSubmit = (event) => {
+		event.preventDefault();
+		dispatch(actions.signup(event.target.firstname.value, event.target.lastname.value, 
+			event.target.username.value, event.target.email.value, event.target.password.value));
+	}
 	return {
-		delClick
+		delClick,
+		signupSubmit
 	}
 }
 
@@ -34,28 +40,34 @@ let createHandlers = (dispatch) => {
  * Medicine is a React Component that renders a list item that contains the name of the medicine,
  * the days of the week, the time that the medicine should be taken, and a delete button.
  */
-class SignUp extends React.Component {
+class SignUp extends Component {
 	constructor(props) {
 	    super(props);
 	    this.handlers = createHandlers(this.props.dispatch);
 	}
 	render() {
 		return (
-			 <form id="signupForm">
+			 <form id="signupForm" onSubmit={this.handlers.signupSubmit}>
 		      <div id="border-signup">
 		      <h1>Sign Up</h1>
-		        <input type="text" name="firstname" value="" className="form-control input-sm" placeholder="First Name"  />
-		        <input type="text" name="lastname" value="" className="form-control input-sm" placeholder="Last Name"  />
-		        <input type="text" name="username" value="" className="form-control input-sm" placeholder="Username"  />
-		        <input type="text" name="email" value="" className="form-control input-sm" placeholder="Email Address"  />
-		        <input type="password" name="password" value="" className="form-control input-sm" placeholder="Password"  />
-		        <input type="password" name="confirm_password" value="" className="form-control input-sm" placeholder="Confirm Password"  />
-		        <label><input type="checkbox" name="terms"/> I agree with the <a href="#">Terms and Conditions</a>.</label>
+		        <input type="text" name="firstname" className="form-control input-sm" placeholder="First Name" autoComplete="off" required/>
+		        <input type="text" name="lastname" className="form-control input-sm" placeholder="Last Name" autoComplete="off" required/>
+		        <input type="text" name="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
+		        <input type="text" name="email" className="form-control input-sm" placeholder="Email Address" autoComplete="off" required/>
+		        <input type="password" name="password" className="form-control input-sm" placeholder="Password" autoComplete="off" required/>
 		        <input type="submit" value="Sign Up" className="btn btn-info btn-block"/>
+		        <p>Already have an account? Click <a href="#/login">here</a> to login!</p>
 		      </div>
 		    </form>
 		);
 	}
 }
 
-export default SignUp;
+let mapStateToProps = (state, props) => {
+	return {
+
+	};
+};
+
+let Container = connect(mapStateToProps)(SignUp);
+export default Container;
