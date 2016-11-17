@@ -8,7 +8,7 @@
 import React, {Component}from 'react';
 import {connect} from 'react-redux';
 import Medicine from './medicine';
-// import actions from '../actions/medication';
+import actions from '../actions/medication';
 
 const changeToAMPM = (time) => {
 	time = time.split(':'); // convert to array
@@ -31,6 +31,9 @@ const changeToAMPM = (time) => {
 class MedList extends Component {
 	constructor(props) {
 	    super(props);
+	}
+	componentDidMount() {
+		this.props.dispatch(actions.fetchMedications(this.props.username, this.props.password));
 	}
 	render() {
 		let array = this.props.meds.map((med, index) => {
@@ -70,7 +73,9 @@ let mapStateToProps = (state, props) => {
 		wedFlag: state.wedFlag,
 		thuFlag: state.thuFlag,
 		friFlag: state.friFlag,
-		satFlag: state.satFlag
+		satFlag: state.satFlag,
+		username: state.username,
+		password: state.password
 	};
 };
 

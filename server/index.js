@@ -16,7 +16,6 @@ import {sendEmail} from './emailer';
 const jsonParser = bodyParser.json();
 
 const strategy = new BasicStrategy(function(username, password, callback) {
-    console.log(username);
     User.findOne({
         username: username
     }, function (err, user) {
@@ -49,6 +48,7 @@ const app = express();
 app.use(passport.initialize());
 
 app.use(express.static(process.env.CLIENT_PATH));
+
 
 /**
 * POST to /user creates new username and password
@@ -245,8 +245,8 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
     Medications.find({userId: req.user._id}).exec(function(err, meds) {
         if (err) {
             return res.status(500).json({message: 'Internal Server Errror'});
-        }
-        res.json(meds);
+        } 
+        res.status(200).json(meds);
     });
 });
 
@@ -369,7 +369,7 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
         return res.status(422).json({message: 'Incorrect field type: taken'});
     }
     // Look up user to retrieve email
-    User.findOne({username: req.user.username}).exec(function(err, entry) {
+    User.findOne({username: req.body.username}).exec(function(err, entry) {
         if(err) return res.status(500).json({
                         message: 'Internal server error'
         });
