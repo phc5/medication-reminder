@@ -38,19 +38,20 @@ class MedList extends Component {
 			return (<Medicine key={index} medicine={med[0]} days={med[1]} time={time} />);
 		});
 		return <div>
-			 <table>
-			 	<thead>
-			 		<tr>
-			 			<th>Name</th>
-			 			<th>Days</th>
-			 			<th>Time</th>
-			 		</tr>
-			 	</thead>
-			 	<tbody>
-			 		{array}
-			 	</tbody>
-			 </table>
-		   </div>	
+				 <table>
+				 	<thead>
+				 		<tr>
+				 			<th>Name</th>
+				 			<th>Days</th>
+				 			<th>Time</th>
+				 			<th></th>
+				 		</tr>
+				 	</thead>
+				 	<tbody>
+				 		{array}
+				 	</tbody>
+				 </table>
+			   </div>	
 	}
 }
 

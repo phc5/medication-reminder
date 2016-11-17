@@ -41,7 +41,7 @@ class ContactUs extends Component {
 	}
 	render() {
 		return (
-		    <div id="contactUs">
+		    <div className="form-group contact">
 		      <p>If you have any questions, please contact us at medi_reminder@example.com</p>
 		      <button className="closeButton">Close</button>
 		    </div>

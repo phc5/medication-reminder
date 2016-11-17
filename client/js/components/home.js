@@ -6,7 +6,6 @@
  */
 import React, {Component} from 'react';
 import Login from './login-form'
-import Signup from './signup-form'
 
 /**
  * MedContainer is a React Component that renders a MedForm Component and MedList
@@ -19,7 +18,6 @@ class Home extends Component {
 	render() {
 		return (<div>
 					<Login />
-					<Signup />
 				</div>
 		)
 	}
