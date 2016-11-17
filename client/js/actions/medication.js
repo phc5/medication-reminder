@@ -59,7 +59,7 @@ const deleteButton = (med) => {
 const FETCH_MEDICATION_REQUEST = "FETCH_MEDICATION_REQUEST";
 const fetchMedicationRequest = () => {
 	return {
-		type: FETCH_MEDIATION_REQUEST
+		type: FETCH_MEDICATION_REQUEST
 	};
 };
 
@@ -92,10 +92,11 @@ const fetchMedicationError = (error) => {
 };
 
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-const loginSuccess = (username) => {
+const loginSuccess = (username, password) => {
 	return {
 		type: LOGIN_SUCCESS,
-		username: username
+		username: username, 
+		password: password
 	};
 };
 
@@ -129,11 +130,16 @@ const signupError = (error) => {
  * 
  * @return {object} action - The action and its properties.
  */
-const fetchMedications = (username) => {
+const fetchMedications = (username, password) => {
 	return (dispatch) => {
 		var url = '/medication';
 		dispatch(fetchMedicationRequest());
-		return fetch(url).then((response) => {
+		let enUserPass = btoa(username + ":" + password);
+		return fetch(url, {
+			method: 'GET',
+			headers: {'Accept':'application/json', Authorization: 'Basic ' + enUserPass}
+		})
+		.then((response) => {
 			if (response.status < 200 || response.status >= 300) {
 				let error = new Error(response.statusText);
 				error.response = response;
@@ -142,6 +148,7 @@ const fetchMedications = (username) => {
 			return response.json();
 		})
 		.then((data) => {
+			console.log(data);
 			return dispatch(fetchMedicationSuccess(data));
 		})
 		.catch((error) => {
@@ -168,7 +175,7 @@ const login = (username, password) => {
 		})
 		.then((data) => {
 			window.location.replace('http://localhost:8080/#/profile');
-			return dispatch(loginSuccess(username));
+			return dispatch(loginSuccess(username, password));
 		})
 		.catch((error) => {
 			console.log(error);
