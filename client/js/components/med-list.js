@@ -10,6 +10,12 @@ import {connect} from 'react-redux';
 import Medicine from './medicine';
 import actions from '../actions/medication';
 
+/**
+ * changeToAMPM() will convert the military time input into **:** AM/PM format.
+ *
+ * @params {string} time - Time in military format.
+ * @params {string} timeValue - Time in **:** AM/PM format.
+ */
 const changeToAMPM = (time) => {
 	time = time.split(':'); // convert to array
 
@@ -31,9 +37,6 @@ const changeToAMPM = (time) => {
 class MedList extends Component {
 	constructor(props) {
 	    super(props);
-	}
-	componentDidMount() {
-		this.props.dispatch(actions.fetchMedications(this.props.username, this.props.password));
 	}
 	render() {
 		let array = this.props.meds.map((med, index) => {

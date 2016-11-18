@@ -64,6 +64,12 @@ const newDay = (actionTime, dayNum) => {
 	return newDate.getTime();
 }
 
+/**
+ * convertUnix() will convert a UNIX timestamp into **:** format.
+ *
+ * @param {string} unixTime - A UNIX timestamp
+ * @return {string} time - A time in format **:**;
+ */
 const convertUnix = (unixTime) => {
 	let date = new Date(unixTime);
 	// Hours part from the timestamp
