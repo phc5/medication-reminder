@@ -255,15 +255,16 @@ app.get('/medication', passport.authenticate('basic', {session:false}), function
 function populateScheduler() {
     Medications.find({}, function(err, data) {
         if(!data) return [];
-        return data.map(entry => {
-            let firstReminder = (new Date(Date.now() + 5000));
-            entry.days.map(day => {
-                if(entry.nextReminder <= Date.now()) {
-                    return schedule.scheduleJob(firstReminder, function() {
-                            scheduleReminder(med, entry, day)
+        return data.map(med => {
+            User.findOne({_id: med.userId}, function(err, entry) {
+                if(med.nextReminder <= Date.now()) {
+                    med.days.map(day => {
+                        return schedule.scheduleJob((Date.now() + 1000), function() {
+                                scheduleReminder(med, entry, day)
+                        });
                     });
-                }
-            });
+                };
+            })
         });
     });
 }
@@ -287,17 +288,18 @@ function setDay(date, dayOfWeek) {
 * @param {number} day - day of week for reminder
 */
 function scheduleReminder(med, entry, day) {
-    console.log("running scheduler");
     //generate email
     let nextReminderDate;
-    if(med.days.indexOf(day) == (med.days.length - 1)) {
-        nextReminderDate = Date.now(setDay(new Date(Date.now()), med.days[0]));
+    if(med.days.length == 1 || med.days.indexOf(day) == (med.days.length - 1)) {
+        // if only one day is selected, set next reminder one week out. If last day of day selctions is selected, then select first day of day selections.
+        nextReminderDate = Date.parse(setDay(new Date(Date.now() + 604800000), med.days[0]));
     } else {
-        nextReminderDate = Date.now(setDay(new Date(Date.now()), med.days[(med.days.indexOf(day) + 1)]));
+        // if last day of multiple days is selected, select first day in selection
+        nextReminderDate = Date.parse(setDay(new Date(Date.now()), med.days[(med.days.indexOf(day) + 1)]));
     }
+    console.log(setDay(new Date(Date.now()), med.days[0]));
     let emailPromise = new Promise((resolve) => {
         sendEmail(entry.email, med.name);
-        console.log("running sendEmail");
         resolve("Success!");
     })
     .then(function() {
@@ -307,6 +309,8 @@ function scheduleReminder(med, entry, day) {
                     nextReminder: nextReminderDate,
                     lastReminder: lastReminderDate
                 }
+            }, function(err) {
+                if(err) {console.log("update database err: ", err);}
             }
         );
         return
