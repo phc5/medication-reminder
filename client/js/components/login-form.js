@@ -56,7 +56,7 @@ class Login extends Component {
  */
 let mapStateToProps = (state, props) => {
 	return {
-
+	
 	};
 };
 
