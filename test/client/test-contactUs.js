@@ -15,7 +15,7 @@ describe('Contact us component', function() {
 	it('Renders contact us section', function() {
 		console.log("made it inside", result.props.children);
 		result.props.className.should.equal('form-group contact');
-		result.props.children[0].type.should.equal('p');
-		result.props.children[0].props.children.should.equal('If you have any questions, please contact us at medi_reminder@example.com');
+		result.props.children.type.should.equal('p');
+		result.props.children.props.children.should.equal('If you have any questions, please contact us at medi_reminder@example.com');
 	});
 });
