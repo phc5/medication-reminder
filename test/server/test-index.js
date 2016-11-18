@@ -2,20 +2,20 @@ global.databaseUri = 'mongodb://localhost/medList';
 
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import server from '../../server/index.js';
+import {runServer, app} from '../../server/index.js';
 import mongoose from 'mongoose';
 import UrlPattern from 'url-pattern';
 
-import User from '../models/user-model';
-import Medications from '../models/medication-model';
+import User from '../../models/user-model';
+import Medications from '../../models/medication-model';
 
 const should = chai.should();
-const app = server.app;
 
 chai.use(chaiHttp);
 
 before(function(done) {
-    server.runServer(function() {
+    runServer(function() {
+        console.log("this runs");
         done()
     });
 });

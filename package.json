@@ -82,6 +82,7 @@
     "npm-run-all": "^3.0.0",
     "react-addons-test-utils": "^15.4.0",
     "react-dom": "^15.4.0",
+    "url-pattern": "^1.0.3",
     "webpack": "^1.13.1"
   },
   "dependencies": {
