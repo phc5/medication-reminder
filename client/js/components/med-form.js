@@ -67,7 +67,7 @@ class MedForm extends Component {
 		let sunClass = this.props.sunFlag ? 'highlight' : 'base';
 		return <form className= "form-group medicine" onSubmit={this.handlers.formSubmit} autoComplete="off">
 					<label htmlFor="medication">Name of Medication</label>&nbsp;
-					<input type="text" required="required" name="medication" pattern="[a-zA-Z\s0-9]*"/>&nbsp;
+					<input type="text" required="required" name="medication"/>&nbsp;
 					<label>Days of the Week</label>&nbsp;
 					<span>
 						<button type="button" className={monClass} onClick={this.handlers.dayClick} name="Monday">Mon</button>
