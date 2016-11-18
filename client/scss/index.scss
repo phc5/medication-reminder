@@ -34,13 +34,17 @@ form.medicine {
   max-width: 60%;
 }
 
+.form-control {
+  margin-top: 15px;
+}
+
+.btn-block {
+  margin-top: 15px;
+}
+
 ul {
   text-align: center;
   list-style-type: none;
-}
-
-input {
-  margin-top: 15px;
 }
 
 .closeButton {
@@ -79,7 +83,7 @@ input {
   border-radius: 8px;
   background-color: white;
   width: 500px;
-  height: 500px;
+  height: 400px;
   padding: 25px 25px 25px 25px;
 }
 

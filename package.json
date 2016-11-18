@@ -8,7 +8,7 @@
   "scripts": {
     "start": "[ \"$NODE_ENV\" = \"production\" ] && npm run serve:server:production || npm run serve:server:dev",
     "dev": "run-p watch serve:server:dev",
-    "test": "mocha --recursive",
+    "test": "mocha --compilers js:babel-core/register --recursive",
     "repl": "babel-node",
     "build": "run-s build:*",
     "clean": "rm -rf build",
@@ -80,6 +80,7 @@
     "node-sass": "^3.8.0",
     "nodemon": "^1.10.0",
     "npm-run-all": "^3.0.0",
+    "react-addons-test-utils": "^15.4.0",
     "webpack": "^1.13.1"
   },
   "dependencies": {
@@ -95,6 +96,7 @@
     "mongoose": "^4.6.7",
     "morgan": "^1.7.0",
     "node-mailjet": "^3.0.6",
+    "node-schedule": "^1.2.0",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "path": "^0.12.7",
