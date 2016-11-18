@@ -42,6 +42,7 @@ class Login extends Component {
 		return (
 			<div>
 				<Nav />
+				<h1>Medication Reminder</h1>
 				<form id="loginForm" onSubmit={this.handlers.logInSubmit}>
 				    <div id="border-form" className="form-group">
 				    <h1>LOGIN</h1>

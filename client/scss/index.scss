@@ -19,7 +19,7 @@ body {
 
 form {
   max-width: 400px;
-  margin: 150px auto;
+  margin: 25px auto;
 }
 
 form.medicine {
@@ -148,4 +148,8 @@ button.delete{
     margin-top: 10px;
     border: 1px solid grey;
     border-radius: 3px;
+}
+
+h1 {
+  text-align: center;
 }
