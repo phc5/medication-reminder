@@ -20,7 +20,7 @@ before(function(done) {
     });
 });
 
-describe('Users', function() {
+describe.only('Users', function() {
     it('should add user on POST', function(done) {
         chai.request(app)
             .post('/user')
@@ -33,13 +33,31 @@ describe('Users', function() {
                 res.should.have.status(201);
                 res.should.be.json;
                 res.body.should.be.a('string');
-                res.body.should.have.length(1);
+                res.body.should.equal("account created");
+                done();
+            });
+    });
+    it('should not add repeated username on POST', function(done) {
+        chai.request(app)
+            .post('/user')
+            .auth('testUser', 'testPassword')
+            .send({
+                'username': "testUser",
+                'password': 'testPassword',
+                'email': 'testEmail'})
+            .end(function(err, res) {
+                should.equal(err, null);
+                res.should.have.status(409);
+                res.should.be.json;
+                res.body.should.be.a('object');
+                res.body.should.equal({message: "Username already taken."});
                 done();
             });
     });
     it('should modify user account on PUT', function(done) {
         chai.request(app)
             .PUT('/user')
+            .auth('testUser', 'testPassword')
             .send({
                 'username': 'changedUserName',
                 'password': 'changedPassWord',
@@ -48,26 +66,42 @@ describe('Users', function() {
                 should.equal(err, null);
                 res.should.have.status(201);
                 res.should.be.json;
-                res.body.should.be.a('object');
-                res.body.should.have.property('name');
-                res.body.should.have.property('id');
-                res.body.name.should.be.a('string');
-                res.body.id.should.be.a('number');
-                res.body.name.should.equal('Kale');
-                storage.items.should.be.a('array');
-                storage.items.should.have.length(4);
-                storage.items[3].should.be.a('object');
-                storage.items[3].should.have.property('id');
-                storage.items[3].should.have.property('name');
-                storage.items[3].id.should.be.a('number');
-                storage.items[3].name.should.be.a('string');
-                storage.items[3].name.should.equal('Kale');
+                res.body.should.be.a('string');
+                res.body.should.equal("account updated");
                 done();
             });
     });
-    it('should not POST if name exists in storage', function(done) {
+    it('should delete user account on DELETE', function(done) {
         chai.request(app)
-            .post('/items')
+            .DELETE('/user')
+            .auth('changedUserName', 'changedPassWord')
+            .end(function(err, res) {
+                should.equal(err, null);
+                res.should.have.status(200);
+                res.should.be.json;
+                res.body.should.be.a('string');
+                res.body.should.equal("account deleted");
+                done();
+            });
+    });
+});
+
+describe('Medications', function() {
+    before(function(done) {
+        chai.request(app)
+            .send({
+                'username': "testUser",
+                'password': 'testPassword',
+                'email': 'testEmail'})          
+            .end(function(err, res) {
+                should.equal(err,null);
+                done();
+            });
+        done()
+    });
+    it('should add medication reminder on POST', function(done) {
+        chai.request(app)
+            .post('/mediciation')
             .send({'name': 'Peppers'})
             .end(function(err, res) {
                 err.should.not.be.null;
