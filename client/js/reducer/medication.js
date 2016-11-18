@@ -64,6 +64,20 @@ const newDay = (actionTime, dayNum) => {
 	return newDate.getTime();
 }
 
+const convertUnix = (unixTime) => {
+	let date = new Date(unixTime);
+	// Hours part from the timestamp
+	let hours = date.getHours();
+	// Minutes part from the timestamp
+	let minutes = "0" + date.getMinutes();
+	// Seconds part from the timestamp
+	let seconds = "0" + date.getSeconds();
+
+	// Will display time in 10:30:23 format
+	return hours + ':' + minutes.substr(-2);
+}
+
+
 /**
  * gameReducer() handles state changes for all actions that occur.
  * 
@@ -82,13 +96,35 @@ const gameReducer = (state, action) => {
 		let days = [];
 		let time = "00:00";
 		let meds = [];
+		// 1479790800000
+		console.log(action.medications);
 		for (let i = 0; i < action.medications.length; i++) {
 			name = action.medications[i].name;
-			days = action.medications[i].days;
+			console.log("~~~");
+			for (let j = 0; j < action.medications[i].days.length; j++) {
+				console.log("```" + action.medications[i].days[j]);
+				if (action.medications[i].days[j] === 0) {
+					days = days.concat("Sun");
+				} else if (action.medications[i].days[j] === 1) {
+					days = days.concat("Mon");
+				} else if (action.medications[i].days[j] === 2) {
+					days = days.concat("Tue");
+				} else if (action.medications[i].days[j] === 3) {
+					days = days.concat("Wed");
+				} else if (action.medications[i].days[j] === 4) {
+					days = days.concat("Thu");
+				} else if (action.medications[i].days[j] === 5) {
+					days = days.concat("Fri");
+				} else if (action.medications[i].days[j] === 6) {
+					days = days.concat("Sat");
+				}
+			}
+			time = convertUnix(action.medications[i].firstReminder);
+			console.log(time);
 			meds.push([name, days, time])
+			days = [];
 		}
 		state.medications = state.medications.concat(meds);
-		console.log(state.medications);
 	} else if (action.type === actions.FETCH_MEDICATION_ERROR) {
 		state.loading = false;
 		state.error = action.error;
@@ -121,7 +157,6 @@ const gameReducer = (state, action) => {
 		let dayNum = [];
 		let dayUnix = [];
 		let date, newDate, time;
-		
 		if (!state.sunFlag && !state.monFlag && !state.tueFlag && !state.wedFlag && !state.thuFlag && !state.friFlag && !state.satFlag) {
 			alert("Please select at least one day");
 		} else {

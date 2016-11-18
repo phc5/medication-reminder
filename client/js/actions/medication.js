@@ -215,19 +215,20 @@ const submitMed = (name, time) => {
 	return (dispatch, getState) => {
 		let medArray = getState().medications;
 		let postArray = medArray[medArray.length -1];
-		console.log(postArray);
 		const url = '/medication';
 		const req = {
 			name: name,
 			days: postArray[3],
 			firstReminder: postArray[4][0],
 			taken: false,
-			username: getState().username
+			username: getState().username,
+			password: getState().password
 		};
-		return fetch(url, {
+		let enUserPass = btoa(req.username + ":" + req.password);
+		return fetch('/medication', {
 			method: 'POST',
 			body: JSON.stringify(req),
-			headers: {'content-type': 'application/json', 'Accept':'application/json'}
+			headers: {Authorization: 'Basic ' + enUserPass, 'content-type': 'application/json', 'Accept':'application/json'}
 		})
 		.then((res) => {
 			if (res.status < 200 || res.status >= 300) {
@@ -238,7 +239,6 @@ const submitMed = (name, time) => {
 			return res.json();
 		})
 		.then((data) => {
-			wind.location.replace('http://localhost:8080/#/login');
 			return dispatch(signupSuccess(data));
 		})
 		.catch((error) => {
