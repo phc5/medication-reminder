@@ -16,6 +16,11 @@ import actions from '../actions/medication';
  * @return {object} handlers - the event handlers specified in this function.
  */
 let createHandlers = (dispatch) => {
+	/**
+	 * logInSubmit() will handle the submit button event on login form.
+	 *
+	 * @params {event} event - the submit event.
+	 */
 	let logInSubmit = (event) => {
 		event.preventDefault();
 		dispatch(actions.login(event.target.username.value, event.target.password.value));
@@ -49,14 +54,15 @@ class Login extends Component {
 }
 
 /**
- * mapStateToProps will map state to the props of this component.
- * 
- * @params {object} state - the state of the application taken from the store.
- * @params {object} props - the props of this component.
+ * mapStateToProps will map the application state to the props.
+ *
+ * @params {object} state - the state of the application.
+ * @params {object} props - the props of the component.
+ * @return {object} mapped - the props of the component mapped to the state of the app;
  */
 let mapStateToProps = (state, props) => {
 	return {
-
+		//needed to use dispatch in createHandlers
 	};
 };
 

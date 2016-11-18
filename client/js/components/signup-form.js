@@ -25,6 +25,12 @@ let createHandlers = (dispatch) => {
 		event.preventDefault();
 		dispatch(actions.deleteButton(event.target.name));
 	}
+	/**
+	 * signupSubmit() will handle the submit on sign up which will dispatch an action called
+	 * signup that sends the username, email, and password.
+	 * 
+	 * @params {object} event - the event that occurred.
+	 */
 	let signupSubmit = (event) => {
 		event.preventDefault();
 		dispatch(actions.signup(event.target.username.value, event.target.email.value, event.target.password.value));
@@ -37,8 +43,7 @@ let createHandlers = (dispatch) => {
 }
 
 /**
- * Medicine is a React Component that renders a list item that contains the name of the medicine,
- * the days of the week, the time that the medicine should be taken, and a delete button.
+ * SignUp is a React Component that renders a form that is used signing up a member..
  */
 class SignUp extends Component {
 	constructor(props) {
@@ -61,6 +66,13 @@ class SignUp extends Component {
 	}
 }
 
+/**
+ * mapStateToProps will map the application state to the props.
+ *
+ * @params {object} state - the state of the application.
+ * @params {object} props - the props of the component.
+ * @return {object} mapped - the props of the component mapped to the state of the app;
+ */
 let mapStateToProps = (state, props) => {
 	return {
 		signUpSuccess: state.signUpSuccess

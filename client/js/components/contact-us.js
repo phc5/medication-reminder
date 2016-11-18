@@ -1,11 +1,11 @@
 /**
- * @summary login-form.js will render a div.
+ * @summary contact-us.js will render a div.
  * 
  * @require react, react-redux, ../actions/medication.
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import actions from '../actions/medication';
+import Nav from './nav';
 /**
  * ContactUs is a React Component that renders a div with information on how to contact the creators of this application.
  */
@@ -15,8 +15,11 @@ class ContactUs extends Component {
 	}
 	render() {
 		return (
-		    <div className="form-group contact">
-		      <p>If you have any questions, please contact us at medi_reminder@example.com</p>
+			<div>
+				<Nav />
+			    <div className="form-group contact">
+			      <p>If you have any questions, please contact us at medi_reminder@example.com</p>
+			    </div>
 		    </div>
 		);
 	}
