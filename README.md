@@ -14,6 +14,13 @@ An app that is designed to set a reminder to take all of your medication on file
     * Make sure the "Initialize this repository with a README" option is left **un**checked
 * Update the remote to point to your GitHub repository: `git remote set-url origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME`
 * Make sure everyone in your group is working out of separate branches on github and push to their branch.  This becomes important when merging together different files.  
+### Tech Stack
+* MongoDB
+* Express
+* React/Redux
+* Node
+
+
 
 ### Working on the project
 
@@ -45,6 +52,7 @@ An app that is designed to set a reminder to take all of your medication on file
 Endpoint to user of Medication Reminder App
 
 
+
 **POST/user** 
 Creates a new username and password
 
@@ -65,11 +73,15 @@ a string
 
 ```
 
+
 **PUT/user** 
 Edit and Update user information
 
 *Data Parameter:* 
 username and/or password
+
+*Require:* 
+passport authentication using username and password
 
 *Returns:* 
 a string
@@ -84,11 +96,15 @@ a string
 
 ```
 
+
 **DELETE/user** 
 Delete user account
 
 *Data Parameter:* 
 None
+
+*Require:* 
+passport authentication to prevent anyone besides user to delete the data
 
 *Returns:* 
 An empty object
@@ -101,14 +117,19 @@ An empty object
 
 ```
 
+
 ###Medication Endpoint
 **/medication** 
 Endpoint for all medications
+
 
 **GET/medication** 
 get an object of medications
 
 *Data Parameter:* 
+
+*Require:* 
+passport authentication
 
 *Returns:* 
 An object of medications
@@ -125,11 +146,15 @@ An object of medications
 > }
 ```	
 
+
 **POST/medication**
 Adds medication 
 
 *Data Parameter:* 
 medication 
+
+*Require:* 
+passport authentication
 
 *Returns:* 
 An object of medications 
@@ -145,11 +170,15 @@ An object of medications
 >     "taken", false
 > }
 
+
 **PUT/medication** 
 Edit and Update medication list
 
 *Data Parameter:* 
 medication, time, and/or date
+
+*Require:* 
+passport authentication
 
 *Returns:* 
 an object of medications
@@ -167,10 +196,14 @@ an object of medications
 
 ```
 
+
 **DELETE/medication** 
 Delete medication list
 
 *Data Parameter:* 
+
+*Require:* 
+passport authentication
 
 *Returns:* 
 An empty object
