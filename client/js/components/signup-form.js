@@ -1,11 +1,12 @@
 /**
  * @summary signup-form.js will render a signup component.
  * 
- * @require react, react-redux, ../actions/medication.
+ * @require react, react-redux, ../actions/medication, ./nav.
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
+import Nav from './nav';
 
 /**
  * createHandlers() will handle all the events that can occur on this component. There is one
@@ -25,6 +26,12 @@ let createHandlers = (dispatch) => {
 		event.preventDefault();
 		dispatch(actions.deleteButton(event.target.name));
 	}
+	/**
+	 * signupSubmit() will handle the submit on sign up which will dispatch an action called
+	 * signup that sends the username, email, and password.
+	 * 
+	 * @params {object} event - the event that occurred.
+	 */
 	let signupSubmit = (event) => {
 		event.preventDefault();
 		dispatch(actions.signup(event.target.username.value, event.target.email.value, event.target.password.value));
@@ -37,8 +44,7 @@ let createHandlers = (dispatch) => {
 }
 
 /**
- * Medicine is a React Component that renders a list item that contains the name of the medicine,
- * the days of the week, the time that the medicine should be taken, and a delete button.
+ * SignUp is a React Component that renders a form that is used signing up a member..
  */
 class SignUp extends Component {
 	constructor(props) {
@@ -47,20 +53,30 @@ class SignUp extends Component {
 	}
 	render() {
 		return (
-		 	<form id="signupForm" onSubmit={this.handlers.signupSubmit}>
-		      <div id="border-signup">
-		      <h1>Sign Up</h1>
-		        <input type="text" name="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
-		        <input type="text" name="email" className="form-control input-sm" placeholder="Email Address" autoComplete="off" required/>
-		        <input type="password" name="password" className="form-control input-sm" placeholder="Password" autoComplete="off" required/>
-		        <input type="submit" value="Sign Up" className="btn btn-info btn-block"/>
-		        <p>Already have an account? Click <a href="#/login">here</a> to login!</p>
-		      </div>
-		    </form>
+			<div>
+				<Nav />
+			 	<form id="signupForm" onSubmit={this.handlers.signupSubmit}>
+			      <div id="border-signup">
+			      <h1>Sign Up</h1>
+			        <input type="text" name="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
+			        <input type="text" name="email" className="form-control input-sm" placeholder="Email Address" autoComplete="off" required/>
+			        <input type="password" name="password" className="form-control input-sm" placeholder="Password" autoComplete="off" required/>
+			        <input type="submit" value="Sign Up" className="btn btn-info btn-block"/>
+			        <p>Already have an account? Click <a href="#/login">here</a> to login!</p>
+			      </div>
+			    </form>
+		    </div>
 		);
 	}
 }
 
+/**
+ * mapStateToProps will map the application state to the props.
+ *
+ * @params {object} state - the state of the application.
+ * @params {object} props - the props of the component.
+ * @return {object} mapped - the props of the component mapped to the state of the app;
+ */
 let mapStateToProps = (state, props) => {
 	return {
 		signUpSuccess: state.signUpSuccess

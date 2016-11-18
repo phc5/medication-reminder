@@ -5,6 +5,7 @@
  */
 import React, {Component} from 'react';
 import Login from './login-form'
+import Nav from './nav';
 
 /**
  * Home is a React Component that renders a Login Component

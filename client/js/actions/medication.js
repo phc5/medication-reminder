@@ -210,7 +210,6 @@ const fetchMedications = (username, password) => {
 			return response.json();
 		})
 		.then((data) => {
-			console.log(data);
 			return dispatch(fetchMedicationSuccess(data));
 		})
 		.catch((error) => {
