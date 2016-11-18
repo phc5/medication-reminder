@@ -47,13 +47,6 @@ ul {
   list-style-type: none;
 }
 
-.closeButton {
-  background-color: #6c7b8b;
-  border-radius: 8px;
-  padding: 10px;
-  color: white;
-}
-
 #loginForm {
   width: 400px;
   display: flex;
@@ -87,11 +80,11 @@ ul {
   padding: 25px 25px 25px 25px;
 }
 
-@media screen and (max-width: 599px) {
-  #border-signup{
+@media screen and (max-width: 699px) {
+  #border-signup {
   width: 100%;
   }
-  #border-form{
+  #border-form {
   width: 100%;
   }
 }
