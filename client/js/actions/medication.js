@@ -245,7 +245,7 @@ const login = (username, password) => {
 			return dispatch(loginSuccess(username, password));
 		})
 		.catch((error) => {
-			console.log(error);
+			alert(error + "!!");
 			return dispatch(loginError(error)); // TODO: SET_NOTIFICATION type, 
 		});
 	}
