@@ -4,7 +4,7 @@
  * @require react, react-redux, ../actions/medication.
  */
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
+
 /**
  * AboutUs is a React Component that renders a div with information about the app and its creators.
  */

@@ -57,7 +57,7 @@ class SignUp extends Component {
 				<Nav />
 			 	<form id="signupForm" onSubmit={this.handlers.signupSubmit}>
 			      <div id="border-signup">
-			      <h1>Sign Up</h1>
+			      <h1>SIGN UP</h1>
 			        <input type="text" name="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
 			        <input type="text" name="email" className="form-control input-sm" placeholder="Email Address" autoComplete="off" required/>
 			        <input type="password" name="password" className="form-control input-sm" placeholder="Password" autoComplete="off" required/>
