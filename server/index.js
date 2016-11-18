@@ -97,7 +97,6 @@ app.post('/user', jsonParser, function(req, res) {
     }
     User.findOne({username: username}).then((result) => {
         if(result) {
-            console.log(result);
             return res.status(409).json({message: "Username already taken."});
         }
         if (!('password' in req.body)) {
@@ -351,47 +350,57 @@ app.post('/medication', jsonParser, passport.authenticate('basic', {session:fals
     if (typeof(medication.taken) !== 'boolean') {
         return res.status(422).json({message: 'Incorrect field type: taken'});
     }
-    // Look up user to retrieve email
-    User.findOne({username: req.body.username}).exec(function(err, entry) {
-        if(err) return res.status(500).json({
-                        message: 'Internal server error'
-        });
-        // use second day of week submitted, if exists, otherwise use first day of week submitted
-        let dayOfWeek = medication.days[1] ? medication.days[1] : medication.days[0];
-        // convert to medication.firstReminder instead of Date.now()
-        let nextReminder = Date.parse(setDay(new Date(Date.now()), dayOfWeek));
-        Medications.create({
-                userId: entry._id,
-                name: medication.name, 
-                firstReminder: medication.firstReminder,
-                days: medication.days,
-                taken: medication.taken,
-                nextReminder: nextReminder,
-                lastReminder: 0
-            }, function(err, med) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Internal server error happening here'
-                    });
-                }
-                // let firstReminder = (new Date(Date.now() + 5000));
-                let firstReminder = new Date(med.firstReminder);
-                med.days.map(day => {
-                    if(med.days.indexOf(day) == 0) {
-                        schedule.scheduleJob(firstReminder, function() {
-                            scheduleReminder(med, entry, day)
-                        });
-                    } else {
-                        let time = setDay(firstReminder, day);
-                        return schedule.scheduleJob(time, function(){
-                            scheduleReminder(med, entry, day)
+    Medications.findOne({name: medication.name}).exec(function(err, med) {
+        if (err) {
+            return res.status(500).json({message: 'Internal server error'});
+        } else if (med) {
+            return res.status(422).json({message: 'Med already exists'});
+        } else {
+            User.findOne({username: req.body.username}).exec(function(err, entry) {
+            console.log(entry);
+            if(err) return res.status(500).json({
+                            message: 'Internal server error'
+            });
+            // use second day of week submitted, if exists, otherwise use first day of week submitted
+            let dayOfWeek = medication.days[1] ? medication.days[1] : medication.days[0];
+            // convert to medication.firstReminder instead of Date.now()
+            let nextReminder = Date.parse(setDay(new Date(Date.now()), dayOfWeek));
+            Medications.create({
+                    userId: entry._id,
+                    name: medication.name, 
+                    firstReminder: medication.firstReminder,
+                    days: medication.days,
+                    taken: medication.taken,
+                    nextReminder: nextReminder,
+                    lastReminder: 0
+                }, function(err, med) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Internal server error happening here'
                         });
                     }
-                });
-                return res.status(201).json({med});
-            }
-        );
+                    // let firstReminder = (new Date(Date.now() + 5000));
+                    let firstReminder = new Date(med.firstReminder);
+                    med.days.map(day => {
+                        if(med.days.indexOf(day) == 0) {
+                            schedule.scheduleJob(firstReminder, function() {
+                                scheduleReminder(med, entry, day)
+                            });
+                        } else {
+                            let time = setDay(firstReminder, day);
+                            return schedule.scheduleJob(time, function(){
+                                scheduleReminder(med, entry, day)
+                            });
+                        }
+                    });
+                    return res.status(201).json({med});
+                }
+            );
+        })
+    }
     })
+    // Look up user to retrieve email
+    
 });
 
 
@@ -441,19 +450,25 @@ app.put('/medication', jsonParser, passport.authenticate('basic', {session:false
 */
 app.delete('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
-    if (!medication._id) {
-        return res.status(422).json({message: 'Missing field: id'});
+    if (!medication.name) {
+        return res.status(422).json({message: 'Missing field: name'});
     }
-    if (typeof(medication._id) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: id'});
+    if (typeof(medication.name) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: name'});
     }
 
-
-    Medications.remove({_id: medication._id}, function(err, count) {
-        if (err) return res.status(501).json(err);
-        if (count.result.n == 0) return res.status(400).json("no entries match medication id sent");
-        res.status(200).json(count.result.n + " object(s) removed");
-    });
+    Medications.findOne({name: medication.name}).exec(function(err, med) {
+        if (err) {
+            return res.status(500).json({message: 'Internal server error'});
+        } else if (med) {
+            Medications.remove({_id: med._id}, function(err, count) {
+                if (err) return res.status(501).json(err);
+                if (count.result.n == 0) return res.status(400).json("no entries match medication id sent");
+                res.status(200).json(count.result.n + " object(s) removed");
+            });
+        }
+    })
+    
 });
 
 const HOST = process.env.HOST;

@@ -25,6 +25,7 @@ let createHandlers = (dispatch) => {
 	let delClick = (event) => {
 		event.preventDefault();
 		dispatch(actions.deleteButton(event.target.name));
+		dispatch(actions.deleteMed(event.target.name));
 	}
 	return {
 		delClick
