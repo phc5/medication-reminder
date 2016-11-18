@@ -87,8 +87,10 @@ ul {
   #border-form {
   width: 100%;
   }
+  .about, .contact {
+  width: 100%;
+  }
 }
-
 
 table {
   margin: auto;
@@ -132,10 +134,12 @@ button.delete{
   box-shadow: 8px 5px 5px black;
   border-radius: 8px;
   background-color: white;
-  width: 500px;
-  padding-bottom: 10px;
-  margin: auto;
+  padding: 10px;
+  margin: 50px auto;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  width: 400px;
 }
 
 .logout {
