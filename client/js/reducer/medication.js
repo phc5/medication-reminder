@@ -202,7 +202,7 @@ const gameReducer = (state, action) => {
 		
 	} else if (action.type === actions.LOGOUT) {
 		alert("You are now logged out!");
-		window.location.replace('http://localhost:8080');
+		window.location.replace('/');
 	}
 
 	return state;
