@@ -20,7 +20,7 @@ const initialState = {
 	satFlag: false,
 	username: null,
 	password: null,
-	signUpSuccess: false
+	signUpSuccess: false,
 }
 
 /** 
@@ -211,6 +211,10 @@ const gameReducer = (state, action) => {
 		state.password = action.password;
 	} else if (action.type === actions.SIGNUP_SUCCESS) {
 		state.signUpSuccess = true;
+	} else if (action.type === actions.DELETE_SUCCESS) {
+
+	} else if (action.type === actions.DELETE_ERROR) {
+		
 	}
 
 	return state;

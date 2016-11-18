@@ -466,19 +466,25 @@ app.put('/medication', jsonParser, passport.authenticate('basic', {session:false
 */
 app.delete('/medication', jsonParser, passport.authenticate('basic', {session:false}), function(req, res) {
     const medication = req.body;
-    if (!medication._id) {
-        return res.status(422).json({message: 'Missing field: id'});
+    if (!medication.name) {
+        return res.status(422).json({message: 'Missing field: name'});
     }
-    if (typeof(medication._id) !== 'string') {
-        return res.status(422).json({message: 'Incorrect field type: id'});
+    if (typeof(medication.name) !== 'string') {
+        return res.status(422).json({message: 'Incorrect field type: name'});
     }
 
-
-    Medications.remove({_id: medication._id}, function(err, count) {
-        if (err) return res.status(501).json(err);
-        if (count.result.n == 0) return res.status(400).json("no entries match medication id sent");
-        res.status(200).json(count.result.n + " object(s) removed");
-    });
+    Medications.findOne({name: medication.name}).exec(function(err, med) {
+        if (err) {
+            return res.status(500).json({message: 'Internal server error'});
+        } else if (med) {
+            Medications.remove({_id: med._id}, function(err, count) {
+                if (err) return res.status(501).json(err);
+                if (count.result.n == 0) return res.status(400).json("no entries match medication id sent");
+                res.status(200).json(count.result.n + " object(s) removed");
+            });
+        }
+    })
+    
 });
 
 const HOST = process.env.HOST;
