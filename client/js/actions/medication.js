@@ -175,6 +175,17 @@ const signupError = (error) => {
 	};
 };
 
+/**
+ * logout() handles if logout button click
+ * 
+ * @return {object} action - The action and its properties.
+ */
+const LOGOUT = "LOGOUT";
+const logout = () => {
+	return {
+		type: LOGOUT
+	}
+}
 
 /**
  * fetchMedications() fetches the medications of a user.
@@ -264,7 +275,8 @@ const signup = (username, email, password) => {
 			return res.json();
 		})
 		.then((data) => {
-			wind.location.replace('http://localhost:8080/#/login');
+			alert("Signup successful!!");
+			window.location.replace('http://localhost:8080/#/login');
 			return dispatch(signupSuccess(data));
 		})
 		.catch((error) => {
@@ -371,6 +383,9 @@ exports.signupSuccess = signupSuccess
 
 exports.SIGNUP_ERROR = SIGNUP_ERROR;
 exports.signupError = signupError
+
+exports.LOGOUT = LOGOUT;
+exports.logout = logout
 
 exports.fetchMedications = fetchMedications
 exports.login = login

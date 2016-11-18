@@ -7,7 +7,7 @@
 import React, {Component} from 'react';
 import MedList from './med-list'
 import MedForm from './med-form'
-
+import Logout from './logout'
 /**
  * Container is a React Component that renders a MedForm Component and MedList Component.
  */
@@ -19,6 +19,7 @@ class Container extends Component {
 		return (<div>
 					<MedForm />
 					<MedList />
+					<Logout />
 				</div>
 		)
 	}
