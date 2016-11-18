@@ -102,13 +102,9 @@ const gameReducer = (state, action) => {
 		let days = [];
 		let time = "00:00";
 		let meds = [];
-		// 1479790800000
-		console.log(action.medications);
 		for (let i = 0; i < action.medications.length; i++) {
 			name = action.medications[i].name;
-			console.log("~~~");
 			for (let j = 0; j < action.medications[i].days.length; j++) {
-				console.log("```" + action.medications[i].days[j]);
 				if (action.medications[i].days[j] === 0) {
 					days = days.concat("Sun");
 				} else if (action.medications[i].days[j] === 1) {
@@ -126,7 +122,6 @@ const gameReducer = (state, action) => {
 				}
 			}
 			time = convertUnix(action.medications[i].firstReminder);
-			console.log(time);
 			meds.push([name, days, time])
 			days = [];
 		}

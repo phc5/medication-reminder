@@ -1,12 +1,12 @@
 /**
  * @summary login-form.js will render a login component.
  * 
- * @require react, react-redux, ../actions/medication.
+ * @require react, react-redux, ../actions/medication, ./nav.
  */
 import React, {Component} from 'react';
-import {Router} from 'react-router';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
+import Nav from './nav';
 
 /**
  * createHandlers() will handle all the events that can occur on this component. There is one
@@ -40,15 +40,18 @@ class Login extends Component {
 	}
 	render() {
 		return (
-			<form id="loginForm" onSubmit={this.handlers.logInSubmit}>
-			    <div id="border-form" className="form-group">
-			    <h1>LOGIN</h1>
-			        <input type="text" name="username" id="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
-			        <input type="password" name="password" className="form-control input-sm" placeholder="Password" required/>
-			        <input type="submit" value="Login" className="btn btn-info btn-block"/>
-			        <p>No account? Click <a href="#/signup">here</a> to register!</p>
-			    </div>
-			 </form>
+			<div>
+				<Nav />
+				<form id="loginForm" onSubmit={this.handlers.logInSubmit}>
+				    <div id="border-form" className="form-group">
+				    <h1>LOGIN</h1>
+				        <input type="text" name="username" id="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
+				        <input type="password" name="password" className="form-control input-sm" placeholder="Password" required/>
+				        <input type="submit" value="Login" className="btn btn-info btn-block"/>
+				        <p>No account? Click <a href="#/signup">here</a> to register!</p>
+				    </div>
+				 </form>
+			</div>
 		);
 	}
 }
