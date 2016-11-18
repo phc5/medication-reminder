@@ -1,11 +1,12 @@
 /**
  * @summary signup-form.js will render a signup component.
  * 
- * @require react, react-redux, ../actions/medication.
+ * @require react, react-redux, ../actions/medication, ./nav.
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import actions from '../actions/medication';
+import Nav from './nav';
 
 /**
  * createHandlers() will handle all the events that can occur on this component. There is one
@@ -52,16 +53,19 @@ class SignUp extends Component {
 	}
 	render() {
 		return (
-		 	<form id="signupForm" onSubmit={this.handlers.signupSubmit}>
-		      <div id="border-signup">
-		      <h1>Sign Up</h1>
-		        <input type="text" name="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
-		        <input type="text" name="email" className="form-control input-sm" placeholder="Email Address" autoComplete="off" required/>
-		        <input type="password" name="password" className="form-control input-sm" placeholder="Password" autoComplete="off" required/>
-		        <input type="submit" value="Sign Up" className="btn btn-info btn-block"/>
-		        <p>Already have an account? Click <a href="#/login">here</a> to login!</p>
-		      </div>
-		    </form>
+			<div>
+				<Nav />
+			 	<form id="signupForm" onSubmit={this.handlers.signupSubmit}>
+			      <div id="border-signup">
+			      <h1>Sign Up</h1>
+			        <input type="text" name="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
+			        <input type="text" name="email" className="form-control input-sm" placeholder="Email Address" autoComplete="off" required/>
+			        <input type="password" name="password" className="form-control input-sm" placeholder="Password" autoComplete="off" required/>
+			        <input type="submit" value="Sign Up" className="btn btn-info btn-block"/>
+			        <p>Already have an account? Click <a href="#/login">here</a> to login!</p>
+			      </div>
+			    </form>
+		    </div>
 		);
 	}
 }
