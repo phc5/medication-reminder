@@ -41,7 +41,7 @@ class Login extends Component {
 			        <input type="text" name="username" id="username" className="form-control input-sm" placeholder="Username" autoComplete="off" required/>
 			        <input type="password" name="password" className="form-control input-sm" placeholder="Password" required/>
 			        <input type="submit" value="Login" className="btn btn-info btn-block"/>
-			        <p>Don't have an account? Click <a href="#/signup">here</a> to register!</p>
+			        <p>No account? Click <a href="#/signup">here</a> to register!</p>
 			    </div>
 			 </form>
 		);
