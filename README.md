@@ -1,6 +1,6 @@
-# Thinkful Full Stack Template
+# Medication Reminder App
 
-A template for developing and deploying full stack JavaScript apps.  Supports ES2015 on the client and server-side.
+An app that is designed to set a reminder to take all of your medication on file at any given time by sending an email.  It can also delay the by certain intervals.   
 
 ## Getting started
 
@@ -13,9 +13,12 @@ A template for developing and deploying full stack JavaScript apps.  Supports ES
 * Create a new repo on GitHub: https://github.com/new
     * Make sure the "Initialize this repository with a README" option is left **un**checked
 * Update the remote to point to your GitHub repository: `git remote set-url origin https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPOSITORY_NAME`
+* Make sure everyone in your group is working out of separate branches on github and push to their branch.  This becomes important when merging together different files.  
 
 ### Working on the project
 
+
+* Divide the tasks into 3 sections, example, UI/REACT/BACKEND.  
 * Move into the project directory: `cd ~/YOUR_PROJECTS_DIRECTORY/YOUR_PROJECT_NAME`
 * Run the development task: `npm run dev`
     * Starts a server running at http://localhost:8080
@@ -34,6 +37,153 @@ A template for developing and deploying full stack JavaScript apps.  Supports ES
     ├── client  Client tests
     └── server  Server tests
 ```
+
+##API Documentation
+###User Endpoint
+**/user**
+
+Endpoint to user of Medication Reminder App
+
+
+**POST/user** 
+Creates a new username and password
+
+*Data Parameter:* 
+username and passwords
+
+
+*Returns:* 
+a string
+
+*Example:* 
+```
+> {
+>     "username": "your_username",
+>     "password": "your_password"
+> }
+> Status: 201 Created
+
+```
+
+**PUT/user** 
+Edit and Update user information
+
+*Data Parameter:* 
+username and/or password
+
+*Returns:* 
+a string
+
+*Example:* 
+```
+> {
+>     "username": "your_username",
+>     "password": "your_password"
+> }
+> Status: 201 Created
+
+```
+
+**DELETE/user** 
+Delete user account
+
+*Data Parameter:* 
+None
+
+*Returns:* 
+An empty object
+
+*Example:* 
+```
+> Status: 200 OK
+> {
+> }
+
+```
+
+###Medication Endpoint
+**/medication** 
+Endpoint for all medications
+
+**GET/medication** 
+get an object of medications
+
+*Data Parameter:* 
+
+*Returns:* 
+An object of medications
+
+*Example:* 
+```
+> Status: 200 OK
+> {
+>     "userId": User ObjectID,
+>     "name": "medication name",
+>     "date": "Date (day of week)",
+>     "time": "time",
+>     "taken", false
+> }
+```	
+
+**POST/medication**
+Adds medication 
+
+*Data Parameter:* 
+medication 
+
+*Returns:* 
+An object of medications 
+
+*Example:* 
+```
+> Status: 201 Created
+> {
+>     "userId": User ObjectID,
+>     "name": "medication name",
+>     "date": "Date (day of week)",
+>     "time": "time",
+>     "taken", false
+> }
+
+**PUT/medication** 
+Edit and Update medication list
+
+*Data Parameter:* 
+medication, time, and/or date
+
+*Returns:* 
+an object of medications
+
+*Example:* 
+```
+> {
+>  		userId: new_medication.userId,
+>    	name: new_medication.name, 
+>       date: new_medication.date, 
+>       time: new_medication.time,
+>       taken: new_medication.taken
+> }
+> Status: 201 Created
+
+```
+
+**DELETE/medication** 
+Delete medication list
+
+*Data Parameter:* 
+
+*Returns:* 
+An empty object
+
+*Example:* 
+```
+> Status: 200 OK
+> {
+> }
+
+```
+
+
 
 ## Deployment
 
@@ -70,5 +220,4 @@ Requires the [Travis CLI client](https://github.com/travis-ci/travis.rb).
 
 ### Deploying using CD
 
-* Push your code to GitHub: `git push origin master`
-
+* Push your code to GitHub: `git push origin 
