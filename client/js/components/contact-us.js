@@ -43,7 +43,6 @@ class ContactUs extends Component {
 		return (
 		    <div className="form-group contact">
 		      <p>If you have any questions, please contact us at medi_reminder@example.com</p>
-		      <button className="closeButton">Close</button>
 		    </div>
 		);
 	}
