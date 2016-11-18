@@ -16,8 +16,8 @@ chai.use(chaiHttp);
 before(function(done) {
     runServer(function() {
         console.log("this runs");
-        done()
-    });
+        done();
+    })
 });
 
 describe.only('Users', function() {
@@ -46,7 +46,7 @@ describe.only('Users', function() {
                 'password': 'testPassword',
                 'email': 'testEmail'})
             .end(function(err, res) {
-                should.equal(err, null);
+                should.not.equal(err, null);
                 res.should.have.status(409);
                 res.should.be.json;
                 res.body.should.be.a('object');
