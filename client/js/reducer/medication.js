@@ -104,28 +104,12 @@ const gameReducer = (state, action) => {
 		let meds = [];
 		for (let i = 0; i < action.medications.length; i++) {
 			name = action.medications[i].name;
-			for (let j = 0; j < action.medications[i].days.length; j++) {
-				if (action.medications[i].days[j] === 0) {
-					days = days.concat("Sun");
-				} else if (action.medications[i].days[j] === 1) {
-					days = days.concat("Mon");
-				} else if (action.medications[i].days[j] === 2) {
-					days = days.concat("Tue");
-				} else if (action.medications[i].days[j] === 3) {
-					days = days.concat("Wed");
-				} else if (action.medications[i].days[j] === 4) {
-					days = days.concat("Thu");
-				} else if (action.medications[i].days[j] === 5) {
-					days = days.concat("Fri");
-				} else if (action.medications[i].days[j] === 6) {
-					days = days.concat("Sat");
-				}
-			}
+			days = action.medications[i].days.map(day => ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][day]);
 			time = convertUnix(action.medications[i].firstReminder);
 			meds.push([name, days, time])
 			days = [];
 		}
-		state.medications = state.medications.concat(meds);
+		state.medications = meds;
 	} else if (action.type === actions.FETCH_MEDICATION_ERROR) {
 		state.loading = false;
 		state.error = action.error;
