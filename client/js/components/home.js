@@ -1,15 +1,13 @@
 /**
- * @summary med-container.js is the container that holds MedForm and MedList components. It 
- * is rendered in index.js.
+ * @summary home.js is the container that holds Login component.
  * 
- * @require react, med-list, med-form
+ * @require react,  login-form
  */
 import React, {Component} from 'react';
 import Login from './login-form'
 
 /**
- * MedContainer is a React Component that renders a MedForm Component and MedList
- * Component.
+ * Home is a React Component that renders a Login Component
  */
 class Home extends Component {
 	constructor(props) {

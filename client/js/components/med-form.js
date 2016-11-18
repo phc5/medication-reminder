@@ -86,8 +86,8 @@ class MedForm extends Component {
 }
 
 /**
- * mapStateToProps will map the sunFlag, monFlag, tueFlag, wedFlag, thuFlag, friFlag,
- * and satFlag from the state to the component's sunFlag, monFlag, tueFlag, wedFlag, thuFlag,
+ * mapStateToProps will map the medications, sunFlag, monFlag, tueFlag, wedFlag, thuFlag, friFlag,
+ * and satFlag from the state to the component's medication, sunFlag, monFlag, tueFlag, wedFlag, thuFlag,
  * friFlag, satFlag props.
  * 
  * @params {object} state - the state of the application taken from the store.

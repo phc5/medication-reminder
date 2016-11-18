@@ -91,6 +91,13 @@ const fetchMedicationError = (error) => {
 	};
 };
 
+/**
+ * loginSuccess() handles if login succeeded
+ * 
+ * @param {string} username - A username.
+ * @param {string} password - A password.
+ * @return {object} action - The action and its properties.
+ */
 const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 const loginSuccess = (username, password) => {
 	return {
@@ -100,6 +107,12 @@ const loginSuccess = (username, password) => {
 	};
 };
 
+/**
+ * loginError() handles if login fails
+ * 
+ * @param {string} error - An error that occurred.
+ * @return {object} action - The action and its properties.
+ */
 const LOGIN_ERROR = "LOGIN_ERROR";
 const loginError = (error) => {
 	return {
@@ -108,6 +121,11 @@ const loginError = (error) => {
 	};
 };
 
+/**
+ * deleteSuccess() handles if delete succeeded
+ * 
+ * @return {object} action - The action and its properties.
+ */
 const DELETE_SUCCESS = "DELETE_SUCCESS";
 const deleteSuccess = () => {
 	return {
@@ -115,6 +133,12 @@ const deleteSuccess = () => {
 	};
 };
 
+/**
+ * deleteError() handles if deleteMed fails
+ * 
+ * @param {string} error - An error that occurred.
+ * @return {object} action - The action and its properties.
+ */
 const DELETE_ERROR = "DELETE_ERROR";
 const deleteError = (error) => {
 	return {
@@ -123,6 +147,12 @@ const deleteError = (error) => {
 	};
 };
 
+/**
+ * signUpSuccess() handles if sigbnup succeeded
+ * 
+ * @param {string} username - A username.
+ * @return {object} action - The action and its properties.
+ */
 const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 const signupSuccess = (username) => {
 	return {
@@ -131,6 +161,12 @@ const signupSuccess = (username) => {
 	};
 };
 
+/**
+ * signupError() handles if signup fails
+ * 
+ * @param {string} error - An error that occurred.
+ * @return {object} action - The action and its properties.
+ */
 const SIGNUP_ERROR = "SIGNUP_ERROR";
 const signupError = (error) => {
 	return {
@@ -172,6 +208,11 @@ const fetchMedications = (username, password) => {
 	}
 };
 
+/**
+ * login() makes a get request to the endpoint /medication
+ * 
+ * @return {object} action - The action and its properties.
+ */
 const login = (username, password) => {
 	return (dispatch) => {
 		const url = '/medication';
@@ -190,6 +231,7 @@ const login = (username, password) => {
 		})
 		.then((data) => {
 			window.location.replace('http://localhost:8080/#/profile');
+			dispatch(fetchMedications(username, password));
 			return dispatch(loginSuccess(username, password));
 		})
 		.catch((error) => {
@@ -199,6 +241,11 @@ const login = (username, password) => {
 	}
 }
 
+/**
+ * signup() makes a POST request to the endpoint /signup
+ * 
+ * @return {object} action - The action and its properties.
+ */
 const signup = (username, email, password) => {
 	return (dispatch) => {
 		const url = '/user';
@@ -226,6 +273,11 @@ const signup = (username, email, password) => {
 	}
 }
 
+/**
+ * submitMed() makes a POST request to the endpoint /medication
+ * 
+ * @return {object} action - The action and its properties.
+ */
 const submitMed = (name, time) => {
 	return (dispatch, getState) => {
 		let medArray = getState().medications;
@@ -262,6 +314,11 @@ const submitMed = (name, time) => {
 	}
 }
 
+/**
+ * login() makes a DELETE request to the endpoint /medication
+ * 
+ * @return {object} action - The action and its properties.
+ */
 const deleteMed = (medication) => {
 	return (dispatch, getState) => {
 		const url = '/medication';
