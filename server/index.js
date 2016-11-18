@@ -44,10 +44,10 @@ const strategy = new BasicStrategy(function(username, password, callback) {
 
 passport.use(strategy);
 
-const app = express();
+export const app = express();
 app.use(passport.initialize());
 
-app.use(express.static(process.env.CLIENT_PATH));
+app.use(express.static(process.env.CLIENT_PATH || "."));
 
 
 /**
@@ -480,7 +480,7 @@ const PORT = process.env.PORT || 8080;
 
 console.log(`Server running in ${process.env.NODE_ENV} mode`);
 
-function runServer() {
+export function runServer() {
     let databaseUri = process.env.DATABASE_URI || global.databaseUri || 'mongodb://localhost/medList';
     mongoose.connect(databaseUri).then(function() {
        app.listen(PORT, HOST, (err) => {
@@ -493,9 +493,12 @@ function runServer() {
             console.log(`Listening on ${host}:${PORT}`);
             setTimeout(populateScheduler, 1000);
         });
-    }).catch(err => {console.error("err: ",err)});
+    })
+    .catch(err => {console.error("err: ",err)});
 }
 
 if (require.main === module) {
     runServer();
 }
+
+

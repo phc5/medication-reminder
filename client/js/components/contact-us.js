@@ -4,7 +4,6 @@
  * @require react, react-redux, ../actions/medication.
  */
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import Nav from './nav';
 /**
  * ContactUs is a React Component that renders a div with information on how to contact the creators of this application.

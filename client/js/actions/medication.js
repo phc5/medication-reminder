@@ -240,12 +240,12 @@ const login = (username, password) => {
 			return res.json();	
 		})
 		.then((data) => {
-			window.location.replace('http://localhost:8080/#/profile');
+			window.location.replace('#/profile');
 			dispatch(fetchMedications(username, password));
 			return dispatch(loginSuccess(username, password));
 		})
 		.catch((error) => {
-			console.log(error);
+			alert(error + "!!");
 			return dispatch(loginError(error)); // TODO: SET_NOTIFICATION type, 
 		});
 	}
@@ -275,7 +275,7 @@ const signup = (username, email, password) => {
 		})
 		.then((data) => {
 			alert("Signup successful!!");
-			window.location.replace('http://localhost:8080/#/login');
+			window.location.replace('#/login');
 			return dispatch(signupSuccess(data));
 		})
 		.catch((error) => {
