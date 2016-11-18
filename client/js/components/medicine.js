@@ -33,8 +33,8 @@ let createHandlers = (dispatch) => {
 }
 
 /**
- * Medicine is a React Component that renders a list item that contains the name of the medicine,
- * the days of the week, the time that the medicine should be taken, and a delete button.
+ * Medicine is a React Component that renders a table row containing the medicine name,
+ * days, time and a delete button.
  */
 class Medicine extends Component {
 	constructor(props) {
@@ -57,12 +57,11 @@ class Medicine extends Component {
 }
 
 /**
- * mapStateToProps will map the sunFlag, monFlag, tueFlag, wedFlag, thuFlag, friFlag,
- * and satFlag from the state to the component's sunFlag, monFlag, tueFlag, wedFlag, thuFlag,
- * friFlag, satFlag props.
- * 
- * @params {object} state - the state of the application taken from the store.
- * @params {object} props - the props of this component.
+ * mapStateToProps will map the application state to the props.
+ *
+ * @params {object} state - the state of the application.
+ * @params {object} props - the props of the component.
+ * @return {object} mapped - the props of the component mapped to the state of the app;
  */
 let mapStateToProps = (state, props) => {
 	return {

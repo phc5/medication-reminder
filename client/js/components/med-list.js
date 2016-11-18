@@ -62,10 +62,11 @@ class MedList extends Component {
 }
 
 /**
- * mapStateToProps will map the state.medications to the components meds prop.
- * 
- * @params {object} state - the state of the application taken from the store.
- * @params {object} props - the props of this component.
+ * mapStateToProps will map the application state to the props.
+ *
+ * @params {object} state - the state of the application.
+ * @params {object} props - the props of the component.
+ * @return {object} mapped - the props of the component mapped to the state of the app;
  */
 let mapStateToProps = (state, props) => {
 	return {
