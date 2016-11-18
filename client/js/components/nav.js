@@ -16,6 +16,7 @@ class AboutUs extends Component {
     return (
       <div className="main-header">
         <ul className="nav nav-pills">
+          <li role="presentation"><a href="#" id="logo">Home</a></li>
           <li role="presentation"><a href="#profile">Profile</a></li>
           <li role="presentation"><a href="#aboutUs">About Us</a></li>
           <li role="presentation"><a href="#contactUs">Contact Us</a></li>
