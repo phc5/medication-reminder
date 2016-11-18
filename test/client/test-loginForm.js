@@ -8,7 +8,7 @@ import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import store from '../../client/js/store';
 
-describe('Login Form component', function() {
+describe.only('Login Form component', function() {
 	var renderer, result, state;
 	beforeEach(function() {
 
