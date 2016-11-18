@@ -33,3 +33,4 @@ const routes = (
 document.addEventListener('DOMContentLoaded', () => {
 	ReactDOM.render(routes, document.getElementById('app'));
 });
+
