@@ -482,7 +482,7 @@ console.log(`Server running in ${process.env.NODE_ENV} mode`);
 
 export function runServer(done) {
     console.log("SERVER STARTING");
-    let databaseUri = process.env.DATABASE_URI || global.databaseUri || 'mongodb://localhost/medList';
+    let databaseUri = process.env.DATABASE_URI || global.databaseUri || 'mongodb://paulchongg:paulchongg@ds033106.mlab.com:33106/medireminder';
     mongoose.connect(databaseUri).then(function() {
        app.listen(PORT, HOST, (err) => {
 
