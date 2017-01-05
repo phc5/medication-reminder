@@ -480,7 +480,8 @@ const PORT = process.env.PORT || 8080;
 
 console.log(`Server running in ${process.env.NODE_ENV} mode`);
 
-export function runServer() {
+export function runServer(done) {
+    console.log("SERVER STARTING");
     let databaseUri = process.env.DATABASE_URI || global.databaseUri || 'mongodb://localhost/medList';
     mongoose.connect(databaseUri).then(function() {
        app.listen(PORT, HOST, (err) => {
@@ -492,6 +493,7 @@ export function runServer() {
             const host = HOST || 'localhost';
             console.log(`Listening on ${host}:${PORT}`);
             setTimeout(populateScheduler, 1000);
+            if(done) done();
         });
     })
     .catch(err => {console.error("err: ",err)});
