@@ -28,6 +28,6 @@ UserSchema.methods.validatePassword = function(password, callback) {
     });
 };
 
-const User = mongoose.model('User', UserSchema);
+export default const User = mongoose.model('User', UserSchema);
 
-module.exports = User;
+
